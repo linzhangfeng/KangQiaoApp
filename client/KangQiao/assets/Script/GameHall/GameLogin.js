@@ -37,23 +37,23 @@ cc.Class({
         this.initData();
     },
 
-    initUI: function () {
+    initUI: function() {
         cc.log("lin=initUI");
         this.addBtnClick(this.findNode("LoginBtn"));
     },
-    initData: function () {
+    initData: function() {
 
     },
-    btnCallback: function (event) {
+    btnCallback: function(event) {
         cc.log("btnCallback:", event.node.name);
         switch (event.node.name) {
-            case  'LoginBtn':
+            case 'LoginBtn':
                 this.toGameHall();
                 break;
         }
     },
-    toGameHall: function () {
-        GSceneMgr.runScene("GameHall",true);
+    toGameHall: function() {
+        GSceneMgr.runScene("GameHall_qiao", true);
     },
     start() {
 

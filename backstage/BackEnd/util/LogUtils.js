@@ -1,4 +1,3 @@
-
 class LoginLogModel {
     //构造函数
     constructor(userId, status, createTime) {
@@ -90,12 +89,20 @@ class OperatorLogModel {
         return this.m_createTime;
     }
 }
-exports.operatorLog = function (req, res) {
-    var resultData = new OperatorLogModel();
-    return resultData;
+var m_dbLog = require('../server/LogManager/DataBaseMgr');
+
+exports.operatorLog = function(adminId, opType, content) {
+    adminId = 871150;
+    //包装数据
+    var objectData = {};
+    objectData["OL_Type"] = opType;
+    objectData["OL_Content"] = content;
+    objectData["UpdateTime"] = 'NOW()';
+    objectData["SA_ID"] = adminId;
+    m_dbLog.add_log_operator(objectData);
 }
 
-exports.loginLog = function (req, res) {
+exports.loginLog = function(req, res) {
     var resultData = new LoginLogModel();
     return resultData;
 }

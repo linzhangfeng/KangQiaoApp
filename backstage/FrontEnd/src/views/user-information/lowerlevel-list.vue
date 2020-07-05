@@ -94,7 +94,7 @@
         <el-form-item :label="$t('userInformation.dialogPay')" prop="title">
           <el-input v-model="temp.dialogPay" />
         </el-form-item>
-        
+
         <el-form-item :label="$t('userInformation.dialogRemark')">
           <el-input v-model="temp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
@@ -181,7 +181,7 @@ export default {
         higerLevelId: '上级用户ID',
         dialogPay: '本次支付金额',
         dialogRemark: '备注',
-        timestamp: new Date(),
+        timestamp: new Date()
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -207,13 +207,13 @@ export default {
       // this.list = getListData();
       // console.log("lin=getList:"+JSON.stringify(this.list));
       // this.total = 20;
-     
+
       // // return;
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
-        this.list = getListData();
+        this.list = getListData()
 
         // console.log("lin=getList:"+JSON.stringify(this.list));
 

@@ -1,4 +1,14 @@
 import request from '@/utils/request'
+import request1 from '@/utils/request_1'
+// userinformation-begin
+export function getOrderList(data) {
+  return request1({
+    url: '/getOrderDetailList',
+    method: 'psot',
+    data
+  })
+}
+// userinformation-end
 
 export function fetchList(query) {
   return request({
@@ -27,7 +37,7 @@ export function fetchPv(pv) {
 export function createArticle(data) {
   return request({
     url: '/vue-element-admin/article/create',
-    method: 'post',
+    method: 'psot',
     data
   })
 }

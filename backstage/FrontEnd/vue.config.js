@@ -36,6 +36,15 @@ module.exports = {
             warnings: false,
             errors: true
         },
+        proxy: {
+            '/api': {
+                target: `http://119.23.221.227/api`,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api' : ''
+                }
+            }
+        },
         before: require('./mock/mock-server.js')
     },
     configureWebpack: {

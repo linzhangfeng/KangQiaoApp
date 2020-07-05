@@ -91,7 +91,7 @@ class OperatorLogModel {
 }
 var m_dbLog = require('../server/LogManager/DataBaseMgr');
 
-exports.operatorLog = function(adminId, opType, content) {
+exports.operatorLog = function(adminId, opType, content,tag) {
     adminId = 871150;
     //包装数据
     var objectData = {};
@@ -99,6 +99,7 @@ exports.operatorLog = function(adminId, opType, content) {
     objectData["OL_Content"] = content;
     objectData["UpdateTime"] = 'NOW()';
     objectData["SA_ID"] = adminId;
+    objectData["OL_TagName"] = tag;
     m_dbLog.add_log_operator(objectData);
 }
 

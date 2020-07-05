@@ -1,29 +1,17 @@
 var m_resultData = require('../../util/result_data');
 var m_db = require('../../util/db');
 var fs = require('fs');
+var m_httpUtils = require('../../util/HttpUtils');
 var fd = require("formidable"); //载入 formidable
 var compressing = require('compressing');
 
 
 //查看操作日记
 exports.getLogOperatorList = function(req, res) {
-    if (req.url == '/hotupdateCheck') {
-        var obj = "";
-        req.on('data', function(data) { //数据较大，分多次接收
-            obj += data;
-        })
-
-        req.on("end", function() { //接收完成后的操作
-            console.log("接收到客户端数据：" + obj);
-            let json = JSON.parse(obj);
-            let data = {};
-            data["update"] = false;
-            if (json.version != "1.0.19") {
-                data["update"] = true;
-            }
-            data["wgtUrl"] = "http://119.23.221.227/hotupdate/qianghongbao/__UNI__B4E8852.wgt";
-            console.log("返回到客户端数据：" + JSON.stringify(data));
-            res.end(JSON.stringify(data));
-        })
+    if (req.url == '/getLogOperatorList') {
+        var tagName = "getLogOperatorList";
+        m_httpUtils.post_receive(req,function(data,tag){
+            m_httpUtils.post_response(res,data,tag);
+        },tagName);
     }
 }

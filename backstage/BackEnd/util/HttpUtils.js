@@ -29,12 +29,12 @@ exports.post_receive = function(req, callback, tag) {
         console.log(logStr);
         m_logUtils.operatorLog(1111, 0, logStr);
         let jsonData = JSON.parse(obj);
-        if (callback) callback(jsonData);
+        if (callback) callback(jsonData,tag);
     });
 }
 
 exports.post_response = function(res, data, tag) {
     res.end(JSON.stringify(data));
-    var logStr = tag + "_post_receive：" + obj;
+    var logStr = tag + "_post_response：" + obj;
     m_logUtils.operatorLog(1111, 0, logStr);
 }

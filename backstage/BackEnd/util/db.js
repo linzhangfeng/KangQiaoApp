@@ -32,7 +32,7 @@ exports.query = function(sql, success, failure) {
                 throw err;
             }
         } else {
-            conn.query(sql, function(qerr, vals, fields) {
+            conn.query(sql[0], function(qerr, vals, fields) {
                 //释放连接  
                 conn.release();
                 //事件驱动回调  

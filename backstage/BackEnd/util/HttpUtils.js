@@ -20,6 +20,7 @@ exports.response = function(req, res, type) {
 }
 
 exports.post_receive = function(req, callback, tag) {
+    var obj = '';
     req.on('data', function(data) { //数据较大，分多次接收
         obj += data;
     });
@@ -27,14 +28,14 @@ exports.post_receive = function(req, callback, tag) {
     req.on("end", function() { //接收完成后的操作
         var logStr = tag + "_post_receive：" + obj;
         console.log(logStr);
-        m_logUtils.operatorLog(1111, 0, logStr);
+        m_logUtils.operatorLog(1111, 0, logStr, tag);
         let jsonData = JSON.parse(obj);
-        if (callback) callback(jsonData,tag);
+        if (callback) callback(jsonData, tag);
     });
 }
 
 exports.post_response = function(res, data, tag) {
     res.end(JSON.stringify(data));
-    var logStr = tag + "_post_response：" + obj;
-    m_logUtils.operatorLog(1111, 0, logStr);
+    var logStr = tag + "_post_response：" + JSON.stringify(data);
+    m_logUtils.operatorLog(1111, 0, logStr, tag);
 }

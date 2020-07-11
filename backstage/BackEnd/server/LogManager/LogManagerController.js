@@ -1,4 +1,4 @@
-var m_resultData = require('../../util/result_data');
+var m_resultData = require('../../util/ResultDataUtils');
 var m_db = require('../../util/db');
 var fs = require('fs');
 var m_httpUtils = require('../../util/HttpUtils');
@@ -10,8 +10,9 @@ var compressing = require('compressing');
 exports.getLogOperatorList = function(req, res) {
     if (req.url == '/getLogOperatorList') {
         var tagName = "getLogOperatorList";
-        m_httpUtils.post_receive(req,function(data,tag){
-            m_httpUtils.post_response(res,data,tag);
-        },tagName);
+        m_httpUtils.post_receive(req, function(data, tag) {
+
+            m_httpUtils.post_response(res, data, tag);
+        }, tagName);
     }
 }

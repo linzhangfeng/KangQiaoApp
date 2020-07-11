@@ -13,7 +13,7 @@ exports.add_log_operator = function(objectArr, success, failure) {
     var sqls = [];
     for (var i = 0; i < objectArr.length; i++) {
         var sql = 'INSERT INTO Sys_OperateLog';
-        sql = sql + m_db.packageInSertSql(object[i]);
+        sql = sql + m_db.packageInSertSql(objectArr[i]);
         sqls.push(sql);
     }
     m_db.query(sqls, success, failure);

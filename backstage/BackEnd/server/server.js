@@ -3,6 +3,7 @@ var g_dictionaryCtl = require('./controller/DictionaryController');
 var g_upLoadCtl = require('./controller/UpLoadController');
 var g_userInfomation = require('./UserInfomation/UserInfomationController');
 var g_logManager = require('./LogManager/LogManagerController');
+var g_login = require('./login/LoginController');
 var app = express();
 
 var m_config = null;
@@ -28,6 +29,10 @@ app.get('/operatorDicType', g_dictionaryCtl.operatorDicType);
 
 app.post('/hotupdateUpLoad', g_upLoadCtl.hotupdateUpLoad);
 app.post('/hotupdateCheck', g_upLoadCtl.hotupdateCheck);
+
+//login begin
+app.post('/manager_login', g_login.manager_login);
+//login end
 
 //userinformation begin
 app.post('/getOrderDetailList', g_userInfomation.getOrderDetailList);

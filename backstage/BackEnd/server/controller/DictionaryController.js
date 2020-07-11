@@ -1,11 +1,11 @@
-var m_resultData = require('../../util/result_data');
+var m_resultData = require('../../util/ResultDataUtils');
 var m_db = require('../../util/db');
-exports.getDicType = function (req, res) {
+exports.getDicType = function(req, res) {
     //获取管理员用户ID
     var receiveData = req.query;
     var admin_id = receiveData['admin_id'];
     var sendData = {};
-    m_db.find_GameGategory(null, function (data) {
+    m_db.find_GameGategory(null, function(data) {
         if (data) {
             console.log("lin=data=" + JSON.stringify(data));
             var arr = [];
@@ -24,7 +24,7 @@ exports.getDicType = function (req, res) {
     });
 }
 
-exports.operatorDicType = function (req, res) {
+exports.operatorDicType = function(req, res) {
     var receiveData = req.query;
     var admin_id = receiveData['admin_id'];
     var type = receiveData['type'];
@@ -37,7 +37,7 @@ exports.operatorDicType = function (req, res) {
     sqlObject["DT_UpdateTime"] = 'NOW()';
     if (type == 1) { //   添加
         sqlObject["DT_CreateTime"] = 'NOW()';
-        m_db.add_GameGategory(sqlObject, function (data) {
+        m_db.add_GameGategory(sqlObject, function(data) {
             var code = -1;
             var status = 0;
             var message = "请求错误";
@@ -52,8 +52,8 @@ exports.operatorDicType = function (req, res) {
             res.send(reusltData.getDataStr());
         });
 
-    } else if (type == 2) {    // 删除
-        m_db.delate_GameGategory(sqlObject, function (data) {
+    } else if (type == 2) { // 删除
+        m_db.delate_GameGategory(sqlObject, function(data) {
             var code = -1;
             var status = 0;
             var message = "数据请求错误";
@@ -67,8 +67,8 @@ exports.operatorDicType = function (req, res) {
             var reusltData = m_resultData.init(code, status, message, JSON.stringify(sendData));
             res.send(reusltData.getDataStr());
         });
-    } else if (type == 3) {    // 修改
-        m_db.update_GameGategory(sqlObject,function(data){
+    } else if (type == 3) { // 修改
+        m_db.update_GameGategory(sqlObject, function(data) {
             var code = -1;
             var status = 0;
             var message = "数据请求错误";

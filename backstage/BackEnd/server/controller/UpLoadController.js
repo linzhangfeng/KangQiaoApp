@@ -1,4 +1,4 @@
-var m_resultData = require('../../util/result_data');
+var m_resultData = require('../../util/ResultDataUtils');
 var m_db = require('../../util/db');
 var fs = require('fs');
 var fd = require("formidable"); //载入 formidable

@@ -1,4 +1,4 @@
-var m_resultData = require('../../util/result_data');
+var m_resultData = require('../../util/ResultDataUtils');
 var m_db = require('../../util/db');
 var m_httpUtils = require('../../util/HttpUtils');
 var fs = require('fs');
@@ -10,9 +10,9 @@ var compressing = require('compressing');
 exports.getUserList = function(req, res) {
     var tagName = "getUserList";
     if (req.url == '/hotupdateCheck') {
-        m_httpUtils.post_receive(req,function(data,tag){
-            m_httpUtils.post_response(res,data,tag);
-        },tagName);
+        m_httpUtils.post_receive(req, function(data, tag) {
+            m_httpUtils.post_response(res, data, tag);
+        }, tagName);
 
     }
 }
@@ -21,9 +21,9 @@ exports.getUserList = function(req, res) {
 exports.getOrderDetailList = function(req, res) {
     var tagName = "getOrderDetailList";
     if (req.url == '/getOrderDetailList') {
-        m_httpUtils.post_receive(req,function(data,tag){
-            m_httpUtils.post_response(res,data,tag);
-        },tagName);
+        m_httpUtils.post_receive(req, function(data, tag) {
+            m_httpUtils.post_response(res, data, tag);
+        }, tagName);
     }
 }
 
@@ -31,9 +31,9 @@ exports.getOrderDetailList = function(req, res) {
 exports.updateOrderDetail = function(req, res) {
     var tagName = "updateOrderDetail";
     if (req.url == '/hotupdateCheck') {
-        m_httpUtils.post_receive(req,function(data,tag){
-            m_httpUtils.post_response(res,data,tag);
-        },tagName);
+        m_httpUtils.post_receive(req, function(data, tag) {
+            m_httpUtils.post_response(res, data, tag);
+        }, tagName);
     }
 }
 
@@ -41,8 +41,8 @@ exports.updateOrderDetail = function(req, res) {
 exports.addOrderDetail = function(req, res) {
     var tagName = "addOrderDetail";
     if (req.url == '/hotupdateCheck') {
-        m_httpUtils.post_receive(req,function(data,tag){
-            m_httpUtils.post_response(res,data,tag);
-        },tagName);
+        m_httpUtils.post_receive(req, function(data, tag) {
+            m_httpUtils.post_response(res, data, tag);
+        }, tagName);
     }
 }

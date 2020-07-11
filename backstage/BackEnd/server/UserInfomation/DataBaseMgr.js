@@ -29,7 +29,7 @@ exports.update_order_details = function(objectArr, success, failure) {
         sql = sql + ' WHERE DO_ID=' + object["DO_ID"];
         sqls.push(sql);
     }
-    m_db.query(sql, success, failure);
+    m_db.query(sqls, success, failure);
 }
 
 //删除订单信息

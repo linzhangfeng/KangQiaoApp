@@ -90,17 +90,17 @@ class OperatorLogModel {
     }
 }
 var m_dbLog = require('../server/LogManager/DataBaseMgr');
-
-exports.operatorLog = function(adminId, opType, content,tag) {
+var Utils = require('../util/Utils');
+exports.operatorLog = function(adminId, opType, content, tag) {
     adminId = 871150;
     //包装数据
     var objectData = {};
     objectData["OL_Type"] = opType;
-    objectData["OL_Content"] = content;
-    objectData["UpdateTime"] = 'NOW()';
+    objectData["OL_Content"] = Utils.toSqlString(content);
+    objectData["CreateTime"] = 'NOW()';
     objectData["SA_ID"] = adminId;
-    objectData["OL_TagName"] = tag;
-    m_dbLog.add_log_operator(objectData);
+    objectData["OL_TagName"] = Utils.toSqlString(tag);
+    m_dbLog.add_log_operator([objectData]);
 }
 
 exports.loginLog = function(req, res) {

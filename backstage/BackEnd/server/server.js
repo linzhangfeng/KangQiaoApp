@@ -32,6 +32,7 @@ app.post('/hotupdateCheck', g_upLoadCtl.hotupdateCheck);
 
 //login begin
 app.post('/manager_login', g_login.manager_login);
+app.get('/manager_info', g_login.manager_info);
 //login end
 
 //userinformation begin

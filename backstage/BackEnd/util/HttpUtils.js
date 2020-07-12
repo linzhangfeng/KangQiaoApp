@@ -18,6 +18,19 @@ exports.response = function(req, res, type) {
         m_logUtils.operatorLog();
     }
 }
+exports.get_receive = function(req, callback, tag) {
+    var data = req.query;
+    var logStr = tag + "_get_receive：" + JSON.stringify(data);
+    console.log(logStr);
+    m_logUtils.operatorLog(1111, 0, logStr, tag);
+    if (callback) callback(data, tag);
+}
+
+exports.get_response = function(res, data, tag) {
+    res.end(JSON.stringify(data));
+    var logStr = tag + "_get_response：" + JSON.stringify(data);
+    m_logUtils.operatorLog(1111, 0, logStr, tag);
+}
 
 exports.post_receive = function(req, callback, tag) {
     var obj = '';

@@ -27,7 +27,7 @@ exports.get_receive = function(req, callback, tag) {
 }
 
 exports.get_response = function(res, data, tag) {
-    res.end(JSON.stringify(data));
+    res.send(JSON.stringify(data));
     var logStr = tag + "_get_response：" + JSON.stringify(data);
     m_logUtils.operatorLog(1111, 0, logStr, tag);
 }

@@ -38,7 +38,6 @@ exports.manager_login = function(req, res) {
 
 exports.manager_info = function(req, res) {
     //获取管理员用户ID
-    var recvData = req.query;
     var sql_obj = {};
     var res_data = {};
     var packageData = null;

@@ -23,8 +23,8 @@ function generateId() {
     return Id;
 }
 
-exports.query = function(sql, success, failure) {
-    console.log("lin=query=sql:" + sql);
+exports.execute = function(sql, success, failure) {
+    console.log("lin=execute=sql:" + sql);
     m_pool.getConnection(function(err, conn) {
         if (err) {
             if (err) {
@@ -33,6 +33,30 @@ exports.query = function(sql, success, failure) {
             }
         } else {
             conn.query(sql[0], function(qerr, vals, fields) {
+                //释放连接  
+                conn.release();
+                //事件驱动回调  
+                if (qerr) {
+                    if (failure) failure(null, fields);
+                    throw qerr;
+                }
+                if (success) success(vals, fields);
+            });
+        }
+    });
+};
+
+
+exports.query = function(sql, success, failure) {
+    console.log("lin=query=sql:", sql);
+    m_pool.getConnection(function(err, conn) {
+        if (err) {
+            if (err) {
+                if (failure) failure(err, fields);
+                throw err;
+            }
+        } else {
+            conn.query(sql, function(qerr, vals, fields) {
                 //释放连接  
                 conn.release();
                 //事件驱动回调  

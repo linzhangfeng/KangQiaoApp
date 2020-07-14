@@ -211,9 +211,8 @@ export default {
       // // return;
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-        this.list = getListData()
+        this.list = getListData();
+        this.total = this.list.length;
 
         // console.log("lin=getList:"+JSON.stringify(this.list));
 

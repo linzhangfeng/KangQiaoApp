@@ -2,10 +2,21 @@ var m_db = require('../../util/db');
 
 //查询所有订单信息
 exports.find_order_details = function(object, success, failure) {
-    var sqls = [];
-    var sql = 'SELECT * FROM User_OrderDetails';
-    sqls.push(sql);
-    m_db.query(sqls, success, failure);
+    sql = 'SELECT User_OrderDetails.UO_ID,User_OrderDetails.UO_Money,User_OrderDetails.CreateTime,User_OrderDetails.UpdateTime,User_Info.UI_Name FROM User_OrderDetails,User_Info where User_Info.UI_ID = User_OrderDetails.UI_ID'
+
+    if (object['UO_ID'] || object['UI_Name']) {
+
+        if (object['UI_Name']) {
+            var UI_Name_sql = ' and User_Info.UI_Name = ' + object['UI_Name'];
+            sql += UI_Name_sql;
+        }
+
+        if (object['UO_ID']) {
+            var UI_ID_sql = ' and User_OrderDetails.UO_ID = ' + object['UO_ID'];
+            sql += UI_ID_sql;
+        }
+    }
+    m_db.query(sql, success, failure);
 }
 
 //新增订单信息

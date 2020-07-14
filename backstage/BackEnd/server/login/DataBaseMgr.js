@@ -2,10 +2,8 @@ var m_db = require('../../util/db');
 
 //查询用户数据
 exports.find_user_data = function(object, success, failure) {
-    var sqls = [];
     var sql = 'SELECT * FROM Sys_Admin WHERE SA_Account=' + object["SA_Account"];
-    sqls.push(sql);
-    m_db.query(sqls, success, failure);
+    m_db.query(sql, success, failure);
 }
 
 //查询所有操作日记

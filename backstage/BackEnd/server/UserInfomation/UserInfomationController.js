@@ -1,9 +1,11 @@
 var m_resultData = require('../../util/ResultDataUtils');
+var Utils = require('../../util/Utils');
 var m_httpUtils = require('../../util/HttpUtils');
 var fs = require('fs');
 var fd = require("formidable"); //载入 formidable
 var compressing = require('compressing');
 var m_db = require('./DataBaseMgr');
+var CodeConfig = require('../../util/CommonConfig');
 
 //活用用户列表
 exports.getUserList = function(req, res) {
@@ -30,19 +32,16 @@ exports.getOrderDetailList = function(req, res) {
             //验证用户
             var sql_obj = {};
             var res_data = {};
-            m_db.find_user_data(sql_obj, function(userDataArr) {
-                var sendData = null;
-                var userData = userDataArr[0];
-                if (userData && userData['SA_Password'] == recvData['password']) {
-                    res_data['token'] = userData['SA_Token'];
-                    sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
-                } else {
-                    sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.UsernameError, res_data);
-                }
-                m_httpUtils.post_response(res, sendData, tag);
+            var packageData = null;
+            if (recvData['userName']) sql_obj['UI_Name'] = Utils.toSqlString(recvData['userName']);
+            if (recvData['orderId']) sql_obj['UO_ID'] = recvData['orderId'];
+            m_db.find_order_details(sql_obj, function(data) {
+                res_data = data;
+                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
             }, function() {
-                sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.FindUserInfoError, res_data);
-                m_httpUtils.post_response(res, sendData, tag);
+                packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
             });
 
         }, tagName);

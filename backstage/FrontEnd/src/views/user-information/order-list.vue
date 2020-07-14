@@ -1,16 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" :placeholder="$t('table.title')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
+      <el-input v-model="listQuery.orderId" :placeholder="$t('userInformation.orderId')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.userName" :placeholder="$t('userInformation.userName')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
@@ -35,24 +28,29 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column :label="$t('userInformation.userId')" width="80px" align="center">
+      <el-table-column :label="$t('userInformation.orderId')" width="80px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.userId }}</span>
+          <span>{{ row.orderId }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInformation.userName')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.level }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.date')" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.userName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInformation.money')" width="80px">
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.higerLevel }}</span>
+          <span style="color:red;">{{ row.money }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('common.createTime')" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.createtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('common.updateTime')" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.updatetime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInformation.actions')" align="center" width="230" class-name="small-padding fixed-width">
@@ -112,6 +110,7 @@ import { getOrderList, fetchPv, createArticle, updateArticle } from '@/api/artic
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { getListData } from './testData'
+import { packageOrderDetailsData } from './config'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
@@ -153,9 +152,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
+        userName: undefined,
+        orderId: undefined,
         sort: '+id'
       },
       importanceOptions: [1, 2, 3],
@@ -190,29 +188,21 @@ export default {
   },
   methods: {
     getList() {
-      // this.list = getListData();
-      // console.log("lin=getList:"+JSON.stringify(this.list));
-      // this.total = 20;
-
-      // // return;
       this.listLoading = true
       getOrderList(this.listQuery).then(response => {
-        console.log('lin=getOrderList:' + JSON.stringify(response.data))
-
-        this.list = response.data.items
-        this.total = response.data.total
-        this.list = getListData()
-
-        // Just to simulate the time of the request
+        this.list = packageOrderDetailsData(response.data);
+        this.total =  this.list.length;
         setTimeout(() => {
           this.listLoading = false
-        }, 1.5 * 1000)
+        }, 0.5 * 1000)
       })
     },
+
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
+    
     handleModifyStatus(row, status) {
       this.$message({
         message: '操作成功',

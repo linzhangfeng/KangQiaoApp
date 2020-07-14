@@ -9,6 +9,7 @@ var ErrorCode = {
     UsernameError: 300,
     PasswordError: 301,
     FindUserInfoError: 302,
+    FindOrderDetailsError: 303,
 }
 
 var ErrorCodeMsg = {
@@ -16,6 +17,7 @@ var ErrorCodeMsg = {
     '300': '用户名输入错误',
     '301': '密码输入错误',
     '302': '用户信息查找错误',
+    '303': '获取订单详情错误',
 }
 exports.ErrorCodeMsg = ErrorCodeMsg;
 exports.ErrorCode = ErrorCode;

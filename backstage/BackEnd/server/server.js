@@ -37,6 +37,9 @@ app.get('/manager_info', g_login.manager_info);
 
 //userinformation begin
 app.post('/getOrderDetailList', g_userInfomation.getOrderDetailList);
+app.post('/addOrderDetail', g_userInfomation.addOrderDetail);
+app.post('/updateOrderDetail', g_userInfomation.updateOrderDetail);
+app.post('/deleteOrderDetail', g_userInfomation.deleteOrderDetail);
 app.post('/getUserList', g_userInfomation.getUserList);
 //userinformation end
 

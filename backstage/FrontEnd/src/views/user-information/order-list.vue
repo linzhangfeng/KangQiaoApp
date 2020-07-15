@@ -69,16 +69,12 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('userInformation.dialogDate')" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        <el-form-item :label="$t('userInformation.userName')" prop="title">
+          <el-input v-model="temp.userName" />
         </el-form-item>
-        <el-form-item :label="$t('userInformation.dialogHigerLevel')" prop="title">
-          <el-input v-model="temp.higerLevelId" />
+        <el-form-item :label="$t('userInformation.money')" prop="title">
+          <el-input v-model="temp.money" />
         </el-form-item>
-        <el-form-item :label="$t('userInformation.dialogPay')" prop="title">
-          <el-input v-model="temp.dialogPay" />
-        </el-form-item>
-
         <el-form-item :label="$t('userInformation.dialogRemark')">
           <el-input v-model="temp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
@@ -106,7 +102,7 @@
 </template>
 
 <script>
-import { getOrderList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { getOrderList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { getListData } from './testData'
@@ -156,17 +152,18 @@ export default {
         orderId: undefined,
         sort: '+id'
       },
+      temp: {
+        userName: '用户名称',
+        money: '消费金额',
+        dialogRemark: '备注',
+        timestamp: new Date()
+      },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
-      temp: {
-        higerLevelId: '上级用户ID',
-        dialogPay: '本次支付金额',
-        dialogRemark: '备注',
-        timestamp: new Date()
-      },
+
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -176,9 +173,8 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        userName: [{ required: true, message: 'userName is required', trigger: 'change' }],
+        money: [{ required: true, message: 'money is required', trigger: 'change' }],
       },
       downloadLoading: false
     }
@@ -248,8 +244,8 @@ export default {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          addOrder(this.temp).then(() => {
+            this.getList()
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -275,7 +271,7 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then(() => {
+          editOrder(tempData).then(() => {
             const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -290,13 +286,17 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
-      })
-      this.list.splice(index, 1)
+      var temp = Object.assign({}, row) // copy obj
+      deleteOrder(temp).then(response => {
+        this.getList();
+        this.$notify({
+          title: '成功',
+          message: '删除成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.list.splice(index, 1)
+      })  
     },
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {

@@ -1,8 +1,10 @@
 var m_db = require('../../util/db');
-
+var Utils = require('../../util/Utils');
 //查询所有订单信息
 exports.find_order_details = function(object, success, failure) {
-    sql = 'SELECT User_OrderDetails.UO_ID,User_OrderDetails.UO_Money,User_OrderDetails.CreateTime,User_OrderDetails.UpdateTime,User_Info.UI_Name FROM User_OrderDetails,User_Info where User_Info.UI_ID = User_OrderDetails.UI_ID'
+    var sql = 'SELECT User_OrderDetails.UO_ID,User_OrderDetails.UO_Money,User_OrderDetails.CreateTime,User_OrderDetails.UpdateTime,User_Info.UI_Name ';
+    sql += 'FROM User_OrderDetails,User_Info ';
+    sql += 'where User_Info.UI_ID = User_OrderDetails.UI_ID and User_OrderDetails.UO_State = 0'
 
     if (object['UO_ID'] || object['UI_Name']) {
 
@@ -19,39 +21,43 @@ exports.find_order_details = function(object, success, failure) {
     m_db.query(sql, success, failure);
 }
 
+exports.find_user_info = function(objectArr, success, failure) {
+    var sql = 'SELECT * FROM User_Info where ';
+    sql += m_db.packageWhereSql(objectArr);
+    m_db.query(sql, success, failure);
+}
+
 //新增订单信息
 exports.add_order_details = function(objectArr, success, failure) {
     var sqls = [];
     for (var i = 0; i < objectArr.length; i++) {
+        let object = objectArr[i];
         var sql = 'INSERT INTO User_OrderDetails';
-        sql = sql + m_db.packageInSertSql(object[i]);
+
+        if (object['UI_Name']) {
+            var UI_ID = '(SELECT UI_ID FROM User_Info where UI_Name=' + object['UI_Name'] + ')';
+            object['UI_ID'] = UI_ID;
+            object['UI_Name'] = null;
+        }
+        sql += m_db.packageInSertSql(objectArr[i]);
         sqls.push(sql);
     }
-    m_db.query(sqls, success, failure);
+    m_db.execute(sqls, success, failure);
 }
 
-//编辑订单信息
+//编辑订单信息,删除订单信息
 exports.update_order_details = function(objectArr, success, failure) {
     var sqls = [];
     for (var i = 0; i < objectArr.length; i++) {
-        var object = object[i];
-        var sql = 'INSERT INTO User_OrderDetails';
-        sql = sql + m_db.packageUpdateSql(object[i]);
-        sql = sql + ' WHERE DO_ID=' + object["DO_ID"];
+        var object = objectArr[i];
+        var temp_object = Utils.copyObject(object);
+        temp_object['UO_ID'] = null;
+        var sql = 'UPDATE User_OrderDetails SET ';
+        sql = sql + m_db.packageUpdateSql(temp_object);
+        sql = sql + ' WHERE UO_ID=' + object["UO_ID"];
         sqls.push(sql);
     }
-    m_db.query(sqls, success, failure);
-}
-
-//删除订单信息
-exports.delete_order_details = function(objectArr, success, failure) {
-    var sqls = [];
-    for (var i = 0; i < objectArr.length; i++) {
-        var object = object[i];
-        var sql = 'DELETE FROM User_OrderDetails WHERE DO_ID=' + object["DO_ID"];
-        sqls.push(sql);
-    }
-    m_db.query(sqls, success, failure);
+    m_db.execute(sqls, success, failure);
 }
 
 //数据库的所有接口只支持增删改查操作，不进行任何逻辑判读 find add update delate

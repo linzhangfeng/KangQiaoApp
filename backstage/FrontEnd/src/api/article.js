@@ -2,15 +2,37 @@ import request from '@/utils/request'
 // userinformation-begin
 export function getOrderList(data) {
     return request({
-            url: '/getOrderDetailList',
-            method: 'post',
-            data
-        })
-        // return request({
-        //     url: '/manager_login',
-        //     method: 'post',
-        //     data
-        // })
+        url: '/getOrderDetailList',
+        method: 'post',
+        data
+    })
+}
+
+//添加订单
+export function addOrder(data) {
+    return request({
+        url: '/addOrderDetail',
+        method: 'post',
+        data
+    })
+}
+
+//编辑订单
+export function editOrder(data) {
+    return request({
+        url: '/updateOrderDetail',
+        method: 'post',
+        data
+    })
+}
+
+//删除订单
+export function deleteOrder(data) {
+    return request({
+        url: '/deleteOrderDetail',
+        method: 'post',
+        data
+    })
 }
 // userinformation-end
 

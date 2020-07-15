@@ -87,6 +87,20 @@ exports.packageInSertSql = function(object) {
     return str;
 };
 
+exports.packageWhereSql = function(object) {
+    let sql = "";
+    for (var key in object) {
+        if (object[key]) {
+            if (sql != "") {
+                sql += "and " + (key + "=" + object[key] + " ");
+            } else {
+                sql += (key + "=" + object[key] + " ");
+            }
+        }
+    }
+    return sql;
+};
+
 exports.packageUpdateSql = function(object) {
     let sql = "";
     for (var key in object) {

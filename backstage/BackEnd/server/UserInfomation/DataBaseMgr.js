@@ -4,8 +4,9 @@ var Utils = require('../../util/Utils');
 exports.find_order_details = function(object, success, failure) {
     var sql = 'SELECT User_OrderDetails.UO_ID,User_OrderDetails.UO_Money,User_OrderDetails.CreateTime,User_OrderDetails.UpdateTime,User_Info.UI_Name ';
     sql += 'FROM User_OrderDetails,User_Info ';
-    sql += 'where User_Info.UI_ID = User_OrderDetails.UI_ID and User_OrderDetails.UO_State = 0'
-
+    sql += 'where User_Info.UI_ID = User_OrderDetails.UI_ID and User_OrderDetails.UO_State = 0 ';
+    sql += 'ORDER BY User_OrderDetails.CreateTime DESC ';
+    sql += 'LIMIT ' + object['startRow'] + ',' + object['pageSize'];
     if (object['UO_ID'] || object['UI_Name']) {
 
         if (object['UI_Name']) {
@@ -18,6 +19,14 @@ exports.find_order_details = function(object, success, failure) {
             sql += UI_ID_sql;
         }
     }
+    m_db.query(sql, success, failure);
+}
+
+//查询订单条数
+exports.find_order_details_count = function(object, success, failure) {
+    var sql = 'SELECT count(*) ';
+    sql += 'FROM User_OrderDetails,User_Info ';
+    sql += 'where User_Info.UI_ID = User_OrderDetails.UI_ID and User_OrderDetails.UO_State = 0 ';
     m_db.query(sql, success, failure);
 }
 

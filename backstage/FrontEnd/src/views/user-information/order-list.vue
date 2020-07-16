@@ -186,8 +186,9 @@ export default {
     getList() {
       this.listLoading = true
       getOrderList(this.listQuery).then(response => {
-        this.list = packageOrderDetailsData(response.data);
-        this.total =  this.list.length;
+        var recv_data = response.data;
+        this.list = packageOrderDetailsData(recv_data.list);
+        this.total =  recv_data.totalCount;
         setTimeout(() => {
           this.listLoading = false
         }, 0.5 * 1000)

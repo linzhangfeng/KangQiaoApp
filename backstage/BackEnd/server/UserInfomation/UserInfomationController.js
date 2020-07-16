@@ -29,15 +29,24 @@ exports.getOrderDetailList = function(req, res) {
             var packageData = null;
             if (recvData['userName']) sql_obj['UI_Name'] = Utils.toSqlString(recvData['userName']);
             if (recvData['orderId']) sql_obj['UO_ID'] = recvData['orderId'];
-            m_db.find_order_details(sql_obj, function(data) {
-                res_data = data;
-                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
-                m_httpUtils.post_response(res, packageData, tag);
-            }, function() {
-                packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
-                m_httpUtils.post_response(res, packageData, tag);
-            });
 
+            sql_obj['pageSize'] = 20;
+            sql_obj['page'] = 1;
+            if (recvData['limit']) sql_obj['pageSize'] = recvData['limit'];
+            if (recvData['page']) sql_obj['page'] = recvData['page'];
+            sql_obj['startRow'] = (sql_obj['page'] - 1) * sql_obj['pageSize'];
+            m_db.find_order_details_count(sql_obj, function(countData) {
+                var totalCount = countData[0]['count(*)'];
+                m_db.find_order_details(sql_obj, function(data) {
+                    res_data['list'] = data;
+                    res_data['totalCount'] = totalCount;
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                }, function() {
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                });
+            })
         }, tagName);
     }
 }

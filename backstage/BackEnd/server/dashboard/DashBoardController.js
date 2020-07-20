@@ -25,7 +25,7 @@ exports.getOrderCostSumByDate = function(req, res) {
             if (recvData['page']) sql_obj['page'] = recvData['page'];
             sql_obj['startRow'] = (sql_obj['page'] - 1) * sql_obj['pageSize'];
             m_db.find_consume_sum_count(sql_obj, function(countData) {
-                var totalMoney = countData[0]['count(*)'];
+                var totalMoney = countData[0]['sum(UO_Money)'];
                 res_data['totalMoney'] = totalMoney;
                 packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
                 m_httpUtils.post_response(res, packageData, tag);

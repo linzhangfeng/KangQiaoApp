@@ -62,45 +62,45 @@ export default {
   components: {
     CountTo
   },
-  data(){
+  data() {
     return {
       tempData: {
         totalCost: 0,
         todayCost: 0,
         todayUser: 0,
-        totalUser:0,
-      },
+        totalUser: 0
+      }
     }
   },
   created() {
     this.getData()
   },
   methods: {
-    getData(){
+    getData() {
       getOrderCostSum({}).then(response => {
-        var recv_data = response.data;
-        this.tempData.totalCost =  recv_data.totalCost;
+        var recv_data = response.data
+        this.tempData.totalCost = recv_data.totalMoney
       })
       getOrderCostSum({
-        date:new Date()
+        date: new Date()
       }).then(response => {
-        var recv_data = response.data;
-        this.tempData.todayCost =  recv_data.totalCost;
+        var recv_data = response.data
+        this.tempData.todayCost = recv_data.totalMoney
       })
 
       getUserListSum({}).then(response => {
-        var recv_data = response.data;
-        this.tempData.totalUser =  recv_data.totalUser;
+        var recv_data = response.data
+        this.tempData.totalUser = recv_data.totalUser
       })
 
       getUserListSum({
-        date:new Date()
+        date: new Date()
       }).then(response => {
-        var recv_data = response.data;
-        this.tempData.todayUser =  recv_data.totalCost;
+        var recv_data = response.data
+        this.tempData.todayUser = recv_data.totalUser
       })
     },
-    
+
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }

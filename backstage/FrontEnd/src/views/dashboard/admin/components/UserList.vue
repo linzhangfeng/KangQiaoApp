@@ -1,6 +1,6 @@
 <template>
   <el-table :data="list" style="width: 100%;padding-top: 15px;">
-    <el-table-column label="订单ID" min-width="50">
+    <el-table-column label="用户ID" min-width="50">
       <template slot-scope="scope">
         {{ scope.row.order_no | orderNoFilter }}
       </template>
@@ -10,7 +10,7 @@
         ¥{{ scope.row.price | toThousandFilter }}
       </template>
     </el-table-column>
-    <el-table-column label="消费金额" width="150" align="center">
+    <el-table-column label="上级ID" width="150" align="center">
       <template slot-scope="{row}">
         <el-tag :type="row.status | statusFilter">
           {{ row.status }}

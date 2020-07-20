@@ -48,7 +48,11 @@ exports.find_user_sum_count = function(object, success, failure) {
 //用户总消费
 exports.find_consume_sum_count = function(object, success, failure) {
     var sql = 'SELECT sum(UO_Money) ';
-    sql += 'FROM User_OrderDetails,User_Info ';
+    sql += 'FROM User_OrderDetails ';
     sql += 'where User_OrderDetails.UO_State = 0 ';
+    if (object['CreateTime']) {
+        var temp_sql = ' and to_days(CreateTime) = to_days(' + object['CreateTime'] + ') ';
+        sql += temp_sql;
+    }
     m_db.query(sql, success, failure);
 }

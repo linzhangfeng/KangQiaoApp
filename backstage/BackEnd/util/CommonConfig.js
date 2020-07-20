@@ -12,6 +12,7 @@ var ErrorCode = {
     FindOrderDetailsError: 303,
     UserInfoNotFound: 304,
     UpdateDetailsError: 305,
+    FindSumCostError: 306,
 }
 
 var ErrorCodeMsg = {
@@ -22,6 +23,7 @@ var ErrorCodeMsg = {
     '303': '获取订单详情错误',
     '304': '用户信息不存在',
     '305': '更新订单失败',
+    '306': '查询总消费金额失败',
 }
 exports.ErrorCodeMsg = ErrorCodeMsg;
 exports.ErrorCode = ErrorCode;

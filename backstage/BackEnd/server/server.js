@@ -3,6 +3,7 @@ var g_dictionaryCtl = require('./controller/DictionaryController');
 var g_upLoadCtl = require('./controller/UpLoadController');
 var g_userInfomation = require('./UserInfomation/UserInfomationController');
 var g_logManager = require('./LogManager/LogManagerController');
+var g_dashboradManager = require('./dashboard/DashBoardController');
 var g_login = require('./login/LoginController');
 var app = express();
 
@@ -34,6 +35,12 @@ app.post('/hotupdateCheck', g_upLoadCtl.hotupdateCheck);
 app.post('/manager_login', g_login.manager_login);
 app.get('/manager_info', g_login.manager_info);
 //login end
+
+//dashboard begin
+app.post('/getOrderCostSumByDate', g_dashboradManager.getOrderCostSumByDate);
+app.post('/getUserSumByDate', g_dashboradManager.getUserSumByDate);
+//dashboard end
+
 
 //userinformation begin
 app.post('/getOrderDetailList', g_userInfomation.getOrderDetailList);

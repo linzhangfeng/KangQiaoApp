@@ -37,7 +37,9 @@ export default {
         dialogRemark: '备    注',
         // orderlist
         orderId: '订单ID',
-        userName: '用户名称',
+        userName: '昵称',
+        phone: '手机号',
+        userAccount: '用户账号',
         money: '消费金额'
 
         // lowerlist

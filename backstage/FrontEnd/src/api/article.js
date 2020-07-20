@@ -34,6 +34,16 @@ export function deleteOrder(data) {
         data
     })
 }
+
+//查询用户列表
+export function getUserList(data) {
+    return request({
+        url: '/getUserList',
+        method: 'post',
+        data
+    })
+}
+
 // userinformation-end
 
 export function fetchList(query) {

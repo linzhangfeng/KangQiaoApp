@@ -7,9 +7,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            New Visits
+            总用户
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="tempData.totalUser" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -20,9 +20,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Messages
+            总收入
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="tempData.totalCost" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -33,9 +33,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Purchases
+            今日新增
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="tempData.todayUser" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -46,9 +46,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Shoppings
+            今日收入
           </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="tempData.todayCost" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -57,12 +57,50 @@
 
 <script>
 import CountTo from 'vue-count-to'
-
+import { getOrderCostSum, getUserListSum } from '@/api/dashboard'
 export default {
   components: {
     CountTo
   },
+  data(){
+    return {
+      tempData: {
+        totalCost: 0,
+        todayCost: 0,
+        todayUser: 0,
+        totalUser:0,
+      },
+    }
+  },
+  created() {
+    this.getData()
+  },
   methods: {
+    getData(){
+      getOrderCostSum({}).then(response => {
+        var recv_data = response.data;
+        this.tempData.totalCost =  recv_data.totalCost;
+      })
+      getOrderCostSum({
+        date:new Date()
+      }).then(response => {
+        var recv_data = response.data;
+        this.tempData.todayCost =  recv_data.totalCost;
+      })
+
+      getUserListSum({}).then(response => {
+        var recv_data = response.data;
+        this.tempData.totalUser =  recv_data.totalUser;
+      })
+
+      getUserListSum({
+        date:new Date()
+      }).then(response => {
+        var recv_data = response.data;
+        this.tempData.todayUser =  recv_data.totalCost;
+      })
+    },
+    
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }

@@ -1,16 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" :placeholder="$t('table.title')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
+      <el-input v-model="listQuery.userId" :placeholder="$t('userInformation.userId')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.userName" :placeholder="$t('userInformation.userName')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.phone" :placeholder="$t('userInformation.phone')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.userAccount" :placeholder="$t('userInformation.userAccount')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
@@ -40,33 +35,34 @@
           <span>{{ row.userId }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.date')" width="150px" align="center">
+      <el-table-column :label="$t('userInformation.userName')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.level')" min-width="100px" align="center">
+      <el-table-column :label="$t('userInformation.userAccount')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.level }}</span>
+          <span>{{ row.userAccount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.oneLevelUser')" width="150px" align="center">
+      <el-table-column :label="$t('userInformation.money')" width="80px">
         <template slot-scope="{row}">
-          <el-button @click="handleUpdate(row)">
-            {{ row.oneLevelUser }}
-          </el-button>
+          <span style="color:red;">{{ row.money }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.secondLevelUser')" width="110px" align="center">
+      <el-table-column :label="$t('userInformation.phone')" width="80px">
         <template slot-scope="{row}">
-          <el-button @click="handleUpdate(row)">
-            {{ row.secondLevelUser }}
-          </el-button>
+          <span>{{ row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.higerLevel')" width="80px">
+      <el-table-column :label="$t('common.createTime')" width="150px" align="center">
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.higerLevel }}</span>
+          <span>{{ row.createtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('common.updateTime')" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.updatetime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInformation.actions')" align="center" width="230" class-name="small-padding fixed-width">
@@ -85,16 +81,12 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('userInformation.dialogDate')" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        <el-form-item :label="$t('userInformation.userName')" prop="title">
+          <el-input v-model="temp.userName" />
         </el-form-item>
-        <el-form-item :label="$t('userInformation.dialogHigerLevel')" prop="title">
-          <el-input v-model="temp.higerLevelId" />
+        <el-form-item :label="$t('userInformation.money')" prop="title">
+          <el-input v-model="temp.money" />
         </el-form-item>
-        <el-form-item :label="$t('userInformation.dialogPay')" prop="title">
-          <el-input v-model="temp.dialogPay" />
-        </el-form-item>
-
         <el-form-item :label="$t('userInformation.dialogRemark')">
           <el-input v-model="temp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
@@ -122,10 +114,11 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { getUserList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { getListData } from './testData'
+import { packageOrderDetailsData, packageUserInfoData } from './config'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
@@ -167,22 +160,24 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
+        userName: undefined,
+        userId: undefined,
+        phone:undefined,
+        userAccount:undefined,
         sort: '+id'
+      },
+      temp: {
+        userName: '用户名称',
+        money: '消费金额',
+        dialogRemark: '备注',
+        timestamp: new Date()
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
-      temp: {
-        higerLevelId: '上级用户ID',
-        dialogPay: '本次支付金额',
-        dialogRemark: '备注',
-        timestamp: new Date()
-      },
+
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -192,9 +187,8 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        userName: [{ required: true, message: 'userName is required', trigger: 'change' }],
+        money: [{ required: true, message: 'money is required', trigger: 'change' }],
       },
       downloadLoading: false
     }
@@ -204,29 +198,22 @@ export default {
   },
   methods: {
     getList() {
-      // this.list = getListData();
-      // console.log("lin=getList:"+JSON.stringify(this.list));
-      // this.total = 20;
-
-      // // return;
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-        this.list = getListData()
-
-        // console.log("lin=getList:"+JSON.stringify(this.list));
-
-        // Just to simulate the time of the request
+      getUserList(this.listQuery).then(response => {
+        var recv_data = response.data;
+        this.list = packageUserInfoData(recv_data.list);
+        this.total =  recv_data.totalCount;
         setTimeout(() => {
           this.listLoading = false
-        }, 1.5 * 1000)
+        }, 0.5 * 1000)
       })
     },
+
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
+    
     handleModifyStatus(row, status) {
       this.$message({
         message: '操作成功',
@@ -272,8 +259,8 @@ export default {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          addOrder(this.temp).then(() => {
+            this.getList()
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -299,7 +286,7 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then(() => {
+          editOrder(tempData).then(() => {
             const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -314,13 +301,17 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
-      })
-      this.list.splice(index, 1)
+      var temp = Object.assign({}, row) // copy obj
+      deleteOrder(temp).then(response => {
+        this.getList();
+        this.$notify({
+          title: '成功',
+          message: '删除成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.list.splice(index, 1)
+      })  
     },
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {

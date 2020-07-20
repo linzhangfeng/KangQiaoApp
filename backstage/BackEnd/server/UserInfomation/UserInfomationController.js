@@ -7,17 +7,6 @@ var compressing = require('compressing');
 var m_db = require('./DataBaseMgr');
 var CodeConfig = require('../../util/CommonConfig');
 
-//活用用户列表
-exports.getUserList = function(req, res) {
-    var tagName = "getUserList";
-    if (req.url == '/getUserList') {
-        m_httpUtils.post_receive(req, function(data, tag) {
-            m_httpUtils.post_response(res, data, tag);
-        }, tagName);
-
-    }
-}
-
 //获取订单列表
 exports.getOrderDetailList = function(req, res) {
     if (req.url == '/getOrderDetailList') {
@@ -134,6 +123,41 @@ exports.deleteOrderDetail = function(req, res) {
                 packageData = m_resultData.create(CodeConfig.ErrorCode.UpdateDetailsError, res_data);
                 m_httpUtils.post_response(res, packageData, tag);
             });
+        }, tagName);
+    }
+}
+
+//获取用户列表
+exports.getUserList = function(req, res) {
+    if (req.url == '/getUserList') {
+        var tagName = "getUserList";
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            //验证用户
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+            if (recvData['userName']) sql_obj['UI_Name'] = Utils.toSqlString(recvData['userName']);
+            if (recvData['userId']) sql_obj['UI_ID'] = recvData['userId'];
+            if (recvData['phone']) sql_obj['UI_Phone'] = recvData['phone'];
+            if (recvData['userAccount']) sql_obj['UA_Name'] = recvData['userAccount'];
+
+            sql_obj['pageSize'] = 20;
+            sql_obj['page'] = 1;
+            if (recvData['limit']) sql_obj['pageSize'] = recvData['limit'];
+            if (recvData['page']) sql_obj['page'] = recvData['page'];
+            sql_obj['startRow'] = (sql_obj['page'] - 1) * sql_obj['pageSize'];
+            m_db.find_user_count(sql_obj, function(countData) {
+                var totalCount = countData[0]['count(*)'];
+                m_db.find_user_info(sql_obj, function(data) {
+                    res_data['list'] = data;
+                    res_data['totalCount'] = totalCount;
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                }, function() {
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                });
+            })
         }, tagName);
     }
 }

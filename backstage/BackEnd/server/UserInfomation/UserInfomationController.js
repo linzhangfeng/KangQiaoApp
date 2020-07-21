@@ -161,3 +161,31 @@ exports.getUserList = function(req, res) {
         }, tagName);
     }
 }
+
+//用户修改
+exports.updateUserInfo = function(req, res) {
+    var tagName = "updateUserInfo";
+    if (req.url == '/updateUserInfo') {
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            //验证用户
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+            if (recvData['userId']) sql_obj['UI_ID'] = recvData['userId'];
+            if (recvData['parentUserName']) sql_obj['UI_ParentID'] = Utils.toSqlString(recvData['parentUserName']);
+            if (recvData['phone']) sql_obj['UI_Phone'] = Utils.toSqlString(recvData['phone']);
+            if (recvData['nickName']) sql_obj['UI_Name'] = Utils.toSqlString(recvData['nickName']);
+            if (recvData['money']) sql_obj['UI_Gold'] = recvData['money'];
+
+            sql_obj['UpdateTime'] = 'NOW()';
+            m_db.update_user_info([sql_obj], function(data) {
+                res_data = data;
+                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            }, function() {
+                packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            });
+        }, tagName);
+    }
+}

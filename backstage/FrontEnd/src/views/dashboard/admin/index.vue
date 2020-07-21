@@ -5,7 +5,7 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
     <el-row :gutter="8">
       <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
+        <order-list />
       </el-col>
       <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 12}" :xl="{span: 12}" style="margin-bottom:30px;">
         <user-list />
@@ -21,7 +21,7 @@ import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
-import TransactionTable from './components/TransactionTable'
+import OrderList from './components/OrderList'
 import UserList from './components/UserList'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
@@ -54,7 +54,7 @@ export default {
     RaddarChart,
     PieChart,
     BarChart,
-    TransactionTable,
+    OrderList,
     TodoList,
     UserList,
     BoxCard

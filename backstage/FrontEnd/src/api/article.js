@@ -44,6 +44,15 @@ export function getUserList(data) {
     })
 }
 
+//修改用户信息
+export function editUserInfo(data) {
+    return request({
+        url: '/updateUserInfo',
+        method: 'post',
+        data
+    })
+}
+
 // userinformation-end
 
 export function fetchList(query) {

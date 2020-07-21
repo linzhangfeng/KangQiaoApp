@@ -9,9 +9,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-        {{ $t('table.add') }}
-      </el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
@@ -40,9 +37,9 @@
           <span>{{ row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.userAccount')" width="100px" align="center">
+      <el-table-column :label="$t('userInformation.nickName')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.userAccount }}</span>
+          <span>{{ row.nickName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInformation.money')" width="80px">
@@ -50,7 +47,7 @@
           <span style="color:red;">{{ row.money }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.phone')" width="80px">
+      <el-table-column :label="$t('userInformation.phone')" width="130px">
         <template slot-scope="{row}">
           <span>{{ row.phone }}</span>
         </template>
@@ -81,11 +78,23 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="$t('userInformation.userId')" prop="title">
+          <el-input v-model="temp.userId" disabled="true" />
+        </el-form-item>
         <el-form-item :label="$t('userInformation.userName')" prop="title">
-          <el-input v-model="temp.userName" />
+          <el-input v-model="temp.userName" disabled="true" />
+        </el-form-item>
+        <el-form-item :label="$t('userInformation.nickName')" prop="title">
+          <el-input v-model="temp.nickName" />
+        </el-form-item>
+        <el-form-item :label="$t('userInformation.parentUserName')" prop="title">
+          <el-input v-model="temp.parentUserName" />
         </el-form-item>
         <el-form-item :label="$t('userInformation.money')" prop="title">
           <el-input v-model="temp.money" />
+        </el-form-item>
+        <el-form-item :label="$t('userInformation.phone')" prop="title">
+          <el-input v-model="temp.phone" />
         </el-form-item>
         <el-form-item :label="$t('userInformation.dialogRemark')">
           <el-input v-model="temp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
@@ -114,7 +123,7 @@
 </template>
 
 <script>
-import { getUserList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
+import {editUserInfo, getUserList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { getListData } from './testData'
@@ -167,10 +176,15 @@ export default {
         sort: '+id'
       },
       temp: {
-        userName: '用户名称',
-        money: '消费金额',
-        dialogRemark: '备注',
-        timestamp: new Date()
+        userId: 0, //用户Id
+        nickName: '', //昵称
+        userName: '', //用户名称
+        parentUserName: '', //上级用户名
+        phone: '', //手机
+        createtime: '', //创建时间
+        updatetime: new Date(), //更新时间
+        money: 0, //消费 
+        remark: 0, //备注 
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
@@ -286,8 +300,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          editOrder(tempData).then(() => {
-            const index = this.list.findIndex(v => v.id === this.temp.id)
+          editUserInfo(tempData).then(() => {
+            const index = this.list.findIndex(v => v.userId === this.temp.userId)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
             this.$notify({

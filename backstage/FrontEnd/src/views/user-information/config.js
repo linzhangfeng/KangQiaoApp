@@ -7,13 +7,15 @@ var OrderStruct = {
 }
 
 var UserInfoStruct = {
-    userId: 0, //订单Id
+    userId: 0, //用户Id
+    nickName: '', //昵称
     userName: '', //用户名称
-    userAccount: '', //用户账号
-    phone: '', //用户金额
+    parentUserName: '', //上级用户名
+    phone: '', //手机
     createtime: '', //创建时间
     updatetime: '', //更新时间
-    money: 0 //消费 
+    money: 0, //消费 
+    remark: 0, //备注 
 }
 
 var listQuery = {
@@ -24,7 +26,14 @@ var listQuery = {
     sort: '+id'
 }
 
-//拷贝结构体
+var userInfo = {
+        page: 1,
+        limit: 20,
+        userName: undefined,
+        orderId: undefined,
+        sort: '+id'
+    }
+    //拷贝结构体
 function copyObject(obj) {
     var newobj = {};
     for (var attr in obj) {
@@ -59,12 +68,13 @@ export function packageUserInfoData(data) {
         var obj = data[i];
         var packageData = copyObject(UserInfoStruct);
         packageData.userId = obj['UI_ID'];
-        packageData.userName = obj['UI_Name'];
+        packageData.nickName = obj['UI_Name'];
         packageData.money = obj['UI_Gold'];
-        packageData.userAccount = obj['UA_Name'];
+        packageData.userName = obj['UA_Name'];
+        packageData.phone = obj['UI_Phone'];
+        packageData.parentUserName = obj['Parent_Name'];
         packageData.updatetime = new Date(obj['UpdateTime']);
         packageData.createtime = new Date(obj['CreateTime']);
-        console.log('lin=packageOrderDetailsData:', packageData.createtime);
         userInfoArr.push(packageData);
     }
     return userInfoArr;

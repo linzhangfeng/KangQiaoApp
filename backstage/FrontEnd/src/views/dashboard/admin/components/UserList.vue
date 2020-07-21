@@ -1,35 +1,37 @@
 <template>
-  <el-table :data="list" style="width: 100%;padding-top: 15px;">
-    <el-table-column label="用户ID" min-width="50">
-      <template slot-scope="scope">
-        {{ scope.row.order_no | orderNoFilter }}
-      </template>
-    </el-table-column>
-    <el-table-column label="昵称" width="150" align="center">
-      <template slot-scope="scope">
-        ¥{{ scope.row.price | toThousandFilter }}
-      </template>
-    </el-table-column>
-    <el-table-column label="上级ID" width="150" align="center">
-      <template slot-scope="{row}">
-        <el-tag :type="row.status | statusFilter">
-          {{ row.status }}
-        </el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column label="创建时间" width="200" align="center">
-      <template slot-scope="{row}">
-        <el-tag :type="row.status | statusFilter">
-          {{ row.status }}
-        </el-tag>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <el-table :data="list" style="width: 100%;padding-top: 15px;">
+      <el-table-column label="用户ID" min-width="50">
+        <template slot-scope="{row}">
+          {{  row.userId }}
+        </template>
+      </el-table-column>
+      <el-table-column label="昵称" width="150" align="center">
+        <template slot-scope="{row}">
+          {{  row.userName }}
+        </template>
+      </el-table-column>
+      <el-table-column label="上级ID" width="150" align="center">
+        <template slot-scope="{row}">
+            {{ row.money }}
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" width="200" align="center">
+        <template slot-scope="{row}">
+          {{ row.updatetime | parseTime('{y}-{m}-{d} {h}:{i}') }}
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-row>
+      <el-button plain align="center"  @click="moreBtnClick" style="width: 100%;padding-top: 15px;" >查看更多</el-button>
+    </el-row>
+  </div>
 </template>
 
 <script>
 import { transactionList } from '@/api/remote-search'
-
+import { packageOrderDetailsData ,packageUserInfoData} from '../../../user-information/config'
+import { getOrderList, getUserList } from '@/api/article'
 export default {
   filters: {
     statusFilter(status) {
@@ -49,9 +51,25 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.initData();
   },
   methods: {
+    initData(){
+      getUserList({
+        page: 1,
+        limit: 10,
+      }).then(response => {
+          var recv_data = response.data;
+          this.list = packageUserInfoData(recv_data.list);
+          this.total =  recv_data.totalCount;
+          setTimeout(() => {
+            this.listLoading = false
+          }, 0.5 * 1000)
+      })
+    },
+    moreBtnClick(){
+       this.$router.push({ path: '/user-information/user-list' })
+    },
     fetchData() {
       transactionList().then(response => {
         this.list = response.data.items.slice(0, 8)

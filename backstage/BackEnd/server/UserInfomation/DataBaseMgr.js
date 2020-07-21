@@ -22,8 +22,8 @@ exports.find_order_details = function(object, success, failure) {
             sql += temp_sql;
         }
     }
-    sql += 'ORDER BY User_OrderDetails.CreateTime DESC ';
-    sql += 'LIMIT ' + object['startRow'] + ',' + object['pageSize'];
+    sql += ' ORDER BY User_OrderDetails.CreateTime DESC ';
+    sql += ' LIMIT ' + object['startRow'] + ',' + object['pageSize'];
     m_db.query(sql, success, failure);
 }
 
@@ -77,22 +77,22 @@ exports.update_order_details = function(objectArr, success, failure) {
 
 //查询用户信息
 exports.find_user_info = function(object, success, failure) {
-    var sql = 'SELECT User_Info.UI_ID,User_Account.UA_Name,User_Info.UI_Phone,User_Info.CreateTime,User_Info.UpdateTime,User_Info.UI_Name ';
-    sql += 'FROM User_Account,User_Info ';
-    sql += 'where User_Account.UA_ID = User_Info.UA_ID and User_Info.UI_State = 0 ';
+    var sql = 'SELECT child.UI_Gold,child.UI_ID,User_Account.UA_Name,child.UI_Phone,child.CreateTime,child.UpdateTime,child.UI_Name,parent.UI_Name AS Parent_Name ';
+    sql += 'FROM User_Account,User_Info child Left JOIN User_Info parent ON parent.UI_ID = child.UI_ParentID ';
+    sql += 'where User_Account.UA_ID = child.UA_ID and child.UI_State = 0 ';
     if (object['UI_ID'] || object['UI_Name'] || object['UI_Phone'] || object['UA_Name'] || object['CreateTime']) {
         if (object['UI_Name']) {
-            var temp_sql = ' and User_Info.UI_Name = ' + object['UI_Name'];
+            var temp_sql = ' and child.UI_Name = ' + object['UI_Name'];
             sql += temp_sql;
         }
 
         if (object['UI_Phone']) {
-            var temp_sql = ' and User_Info.UI_Phone = ' + object['UI_Phone'];
+            var temp_sql = ' and child.UI_Phone = ' + object['UI_Phone'];
             sql += temp_sql;
         }
 
         if (object['UI_ID']) {
-            var temp_sql = ' and User_Info.UI_ID = ' + object['UI_ID'];
+            var temp_sql = ' and child.UI_ID = ' + object['UI_ID'];
             sql += temp_sql;
         }
 
@@ -103,13 +103,27 @@ exports.find_user_info = function(object, success, failure) {
 
 
         if (object['CreateTime']) {
-            var temp_sql = ' and date_format([CreateTime],"%Y-%m-%d") = to_days(' + object['CreateTime'] + ') ';
+            var temp_sql = ' and date_format([child.CreateTime],"%Y-%m-%d") = to_days(' + object['CreateTime'] + ') ';
             sql += temp_sql;
         }
     }
-    sql += ' ORDER BY User_Info.CreateTime DESC ';
+    sql += ' ORDER BY child.CreateTime DESC ';
     sql += 'LIMIT ' + object['startRow'] + ',' + object['pageSize'];
     m_db.query(sql, success, failure);
+}
+
+exports.update_user_info = function(objectArr, success, failure) {
+    var sqls = [];
+    for (var i = 0; i < objectArr.length; i++) {
+        var object = objectArr[i];
+        var temp_object = Utils.copyObject(object);
+        temp_object['UI_ID'] = null;
+        var sql = 'UPDATE User_Info SET ';
+        sql = sql + m_db.packageUpdateSql(temp_object);
+        sql = sql + ' WHERE UI_ID=' + object["UI_ID"];
+        sqls.push(sql);
+    }
+    m_db.execute(sqls, success, failure);
 }
 
 //查询用户数量

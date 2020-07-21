@@ -30,6 +30,8 @@ export default {
         edit: '编辑',
         delete: '删除',
         higerLevel: '上级用户',
+        parentUserName: '上级用户名',
+        nickName: '昵称',
         dialogHigerLevel: '上级 ID',
         dialogDate: '时   间',
         dialogPay: '消费金额',
@@ -37,7 +39,7 @@ export default {
         dialogRemark: '备    注',
         // orderlist
         orderId: '订单ID',
-        userName: '昵称',
+        userName: '用户名',
         phone: '手机号',
         userAccount: '用户账号',
         money: '消费金额'

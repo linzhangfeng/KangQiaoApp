@@ -39,51 +39,51 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [{
-  path: '/redirect',
-  component: Layout,
-  hidden: true,
-  children: [{
-    path: '/redirect/:path(.*)',
-    component: () =>
-      import ('@/views/redirect/index')
-  }]
-},
-{
-  path: '/login',
-  component: () =>
-    import ('@/views/login/index'),
-  hidden: true
-},
-{
-  path: '/auth-redirect',
-  component: () =>
-    import ('@/views/login/auth-redirect'),
-  hidden: true
-},
-{
-  path: '/404',
-  component: () =>
-    import ('@/views/error-page/404'),
-  hidden: true
-},
-{
-  path: '/401',
-  component: () =>
-    import ('@/views/error-page/401'),
-  hidden: true
-},
-{
-  path: '/',
-  component: Layout,
-  redirect: '/dashboard',
-  children: [{
-    path: 'dashboard',
-    component: () =>
-      import ('@/views/dashboard/index'),
-    name: 'Dashboard',
-    meta: { title: 'dashboard', icon: 'dashboard', affix: true }
-  }]
-}
+        path: '/redirect',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: '/redirect/:path(.*)',
+            component: () =>
+                import ('@/views/redirect/index')
+        }]
+    },
+    {
+        path: '/login',
+        component: () =>
+            import ('@/views/login/index'),
+        hidden: true
+    },
+    {
+        path: '/auth-redirect',
+        component: () =>
+            import ('@/views/login/auth-redirect'),
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: () =>
+            import ('@/views/error-page/404'),
+        hidden: true
+    },
+    {
+        path: '/401',
+        component: () =>
+            import ('@/views/error-page/401'),
+        hidden: true
+    },
+    {
+        path: '/',
+        component: Layout,
+        redirect: '/dashboard',
+        children: [{
+            path: 'dashboard',
+            component: () =>
+                import ('@/views/dashboard/index'),
+            name: 'Dashboard',
+            meta: { title: 'dashboard', icon: 'dashboard', affix: true }
+        }]
+    }
 ]
 
 /**
@@ -91,116 +91,122 @@ export const constantRoutes = [{
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [{
-  path: '/user-information',
-  component: Layout,
-  name: 'UserInformation',
-  meta: {
-    title: 'userInformation',
-    icon: 'dashboard'
-  },
-  children: [
-    {
-      path: 'user-list',
-      component: () =>
-        import ('@/views/user-information/user-list'),
-      name: 'UserList',
-      meta: { title: 'userList', affix: true }
+        path: '/user-information',
+        component: Layout,
+        name: 'UserInformation',
+        meta: {
+            title: 'userInformation',
+            icon: 'dashboard'
+        },
+        children: [{
+                path: 'user-list',
+                component: () =>
+                    import ('@/views/user-information/user-list'),
+                name: 'UserList',
+                meta: { title: 'userList', affix: true }
+            },
+            {
+                path: 'order-list',
+                component: () =>
+                    import ('@/views/user-information/order-list'),
+                name: 'OrderList',
+                meta: { title: 'orderList', noCache: true }
+            },
+            {
+                path: 'lowerlevel-list',
+                component: () =>
+                    import ('@/views/user-information/lowerlevel-list'),
+                name: 'LowerLevelUser',
+                meta: { title: 'lowerLevelUser', noCache: true }
+            },
+            {
+                path: 'test-html',
+                component: () =>
+                    import ('@/views/user-information/test-html'),
+                name: 'TestHtml',
+                meta: { title: 'testHtml', noCache: true }
+            }
+        ]
     },
-    {
-      path: 'order-list',
-      component: () =>
-        import ('@/views/user-information/order-list'),
-      name: 'OrderList',
-      meta: { title: 'orderList', noCache: true }
-    },
-    {
-      path: 'lowerlevel-list',
-      component: () =>
-        import ('@/views/user-information/lowerlevel-list'),
-      name: 'LowerLevelUser',
-      meta: { title: 'lowerLevelUser', noCache: true }
-    }
-  ]
-},
 
-{
-  path: '/log-management',
-  component: Layout,
-  name: 'LogManagement',
-  meta: {
-    title: 'logManagement',
-    icon: 'bug'
-  },
-  children: [{
-    path: 'log-error',
-    component: () =>
-      import ('@/views/log-management/log-error'),
-    name: 'LogError',
-    meta: { title: 'logError', noCache: true }
-  },
-  {
-    path: 'log-login',
-    component: () =>
-      import ('@/views/log-management/log-login'),
-    name: 'LogLogin',
-    meta: { title: 'logLogin', noCache: true }
-  },
-  {
-    path: 'log-operate',
-    component: () =>
-      import ('@/views/log-management/log-operate'),
-    name: 'LogOperate',
-    meta: { title: 'logOperate', noCache: true }
-  }
-  ]
-},
-{
-  path: '/system-management',
-  component: Layout,
-  name: 'SystemManagement',
-  meta: {
-    title: 'systemManagement',
-    icon: 'bug'
-  },
-  children: [{
-    path: 'author-management',
-    component: () =>
-      import ('@/views/system-management/author-management'),
-    name: 'AuthorManagement',
-    meta: { title: 'authorManagement', noCache: true }
-  },
-  {
-    path: 'manager-management',
-    component: () =>
-      import ('@/views/system-management/manager-management'),
-    name: 'ManagerManagement',
-    meta: { title: 'managerManagement', noCache: true }
-  },
-  {
-    path: 'menu-management',
-    component: () =>
-      import ('@/views/system-management/menu-management'),
-    name: 'MenuManagement',
-    meta: { title: 'menuManagement', noCache: true }
-  }
-  ]
-},
-// 404 page must be placed at the end !!!
-{ path: '*', redirect: '/404', hidden: true }
+    {
+        path: '/log-management',
+        component: Layout,
+        name: 'LogManagement',
+        meta: {
+            title: 'logManagement',
+            icon: 'bug'
+        },
+        children: [{
+                path: 'log-error',
+                component: () =>
+                    import ('@/views/log-management/log-error'),
+                name: 'LogError',
+                meta: { title: 'logError', noCache: true }
+            },
+            {
+                path: 'log-login',
+                component: () =>
+                    import ('@/views/log-management/log-login'),
+                name: 'LogLogin',
+                meta: { title: 'logLogin', noCache: true }
+            },
+            {
+                path: 'log-operate',
+                component: () =>
+                    import ('@/views/log-management/log-operate'),
+                name: 'LogOperate',
+                meta: { title: 'logOperate', noCache: true }
+            }
+        ]
+    },
+    {
+        path: '/system-management',
+        component: Layout,
+        name: 'SystemManagement',
+        meta: {
+            title: 'systemManagement',
+            icon: 'bug'
+        },
+        children: [{
+                path: 'author-management',
+                component: () =>
+                    import ('@/views/system-management/author-management'),
+                name: 'AuthorManagement',
+                meta: { title: 'authorManagement', noCache: true }
+            },
+            {
+                path: 'manager-management',
+                component: () =>
+                    import ('@/views/system-management/manager-management'),
+                name: 'ManagerManagement',
+                meta: { title: 'managerManagement', noCache: true }
+            },
+            {
+                path: 'menu-management',
+                component: () =>
+                    import ('@/views/system-management/menu-management'),
+                name: 'MenuManagement',
+                meta: { title: 'menuManagement', noCache: true }
+            }
+        ]
+    },
+    // 404 page must be placed at the end !!!
+    { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
 })
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+    const newRouter = createRouter()
+    router.matcher = newRouter.matcher // reset router
 }
 
 export default router

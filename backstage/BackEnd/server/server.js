@@ -49,6 +49,7 @@ app.post('/updateOrderDetail', g_userInfomation.updateOrderDetail);
 app.post('/deleteOrderDetail', g_userInfomation.deleteOrderDetail);
 app.post('/getUserList', g_userInfomation.getUserList);
 app.post('/updateUserInfo', g_userInfomation.updateUserInfo);
+app.post('/addUser', g_userInfomation.addUser);
 //userinformation end
 
 //logmanager begin

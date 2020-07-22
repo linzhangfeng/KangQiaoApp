@@ -52,7 +52,7 @@ export function packageOrderDetailsData(data) {
         var obj = data[i];
         var packageData = copyObject(OrderStruct);
         packageData.orderId = obj['UO_ID'];
-        packageData.userName = obj['UI_Name'];
+        packageData.userName = obj['UI_NickName'];
         packageData.money = obj['UO_Money'];
         packageData.updatetime = new Date(obj['UpdateTime']);
         packageData.createtime = new Date(obj['CreateTime']);
@@ -68,11 +68,12 @@ export function packageUserInfoData(data) {
         var obj = data[i];
         var packageData = copyObject(UserInfoStruct);
         packageData.userId = obj['UI_ID'];
-        packageData.nickName = obj['UI_Name'];
+        packageData.nickName = obj['UI_NickName'];
         packageData.money = obj['UI_Gold'];
         packageData.userName = obj['UA_Name'];
         packageData.phone = obj['UI_Phone'];
-        packageData.parentUserName = obj['Parent_Name'];
+        packageData.parentUserName = obj['Parent_UserName'];
+        packageData.parentNickName = obj['Parent_NickName'];
         packageData.updatetime = new Date(obj['UpdateTime']);
         packageData.createtime = new Date(obj['CreateTime']);
         userInfoArr.push(packageData);

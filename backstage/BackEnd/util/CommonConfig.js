@@ -13,6 +13,7 @@ var ErrorCode = {
     UserInfoNotFound: 304,
     UpdateDetailsError: 305,
     FindSumCostError: 306,
+    UserNameHasExist: 307,
 }
 
 var ErrorCodeMsg = {
@@ -24,6 +25,7 @@ var ErrorCodeMsg = {
     '304': '用户信息不存在',
     '305': '更新订单失败',
     '306': '查询总消费金额失败',
+    '307': '用户名已被注册',
 }
 exports.ErrorCodeMsg = ErrorCodeMsg;
 exports.ErrorCode = ErrorCode;

@@ -53,6 +53,16 @@ export function editUserInfo(data) {
     })
 }
 
+//新增用户
+export function addUserInfo(data) {
+    return request({
+        url: '/addUser',
+        method: 'post',
+        data
+    })
+}
+
+
 // userinformation-end
 
 export function fetchList(query) {

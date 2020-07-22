@@ -1,103 +1,18 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.userId" :placeholder="$t('userInformation.userId')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.userName" :placeholder="$t('userInformation.userName')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.phone" :placeholder="$t('userInformation.phone')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.userAccount" :placeholder="$t('userInformation.userAccount')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        {{ $t('table.search') }}
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        添加测试用户
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        {{ $t('table.reviewer') }}
-      </el-checkbox>
     </div>
-
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-      @sort-change="sortChange"
-    >
-      <el-table-column :label="$t('userInformation.userId')" width="80px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.userId }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.userName')" width="100px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.userName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.nickName')" width="100px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.nickName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.money')" width="80px">
-        <template slot-scope="{row}">
-          <span style="color:red;">{{ row.money }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.phone')" width="130px">
-        <template slot-scope="{row}">
-          <span>{{ row.phone }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('common.createTime')" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.createtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('common.updateTime')" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.updatetime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.actions')" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            {{ $t('userInformation.edit') }}
-          </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            {{ $t('userInformation.delete') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('userInformation.userId')" prop="title">
-          <el-input v-model="temp.userId" :disabled="true" />
+        <el-form-item  label="用户名" prop="title">
+          <el-input v-model="addUserTemp.username"/>
         </el-form-item>
-        <el-form-item :label="$t('userInformation.userName')" prop="title">
-          <el-input v-model="temp.userName" :disabled="true" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.nickName')" prop="title">
-          <el-input v-model="temp.nickName" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.parentUserName')" prop="title">
-          <el-input v-model="temp.parentUserName" :disabled="false" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.money')" prop="title">
-          <el-input v-model="temp.money" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.phone')" prop="title">
-          <el-input v-model="temp.phone" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.dialogRemark')">
-          <el-input v-model="temp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item label="用户密码" prop="title">
+          <el-input v-model="addUserTemp.password"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -123,7 +38,7 @@
 </template>
 
 <script>
-import {editUserInfo, getUserList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
+import {addUserInfo,editUserInfo, getUserList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { getListData } from './testData'
@@ -175,16 +90,9 @@ export default {
         userAccount:undefined,
         sort: '+id'
       },
-      temp: {
-        userId: 0, //用户Id
-        nickName: '', //昵称
-        userName: '', //用户名称
-        parentUserName: '', //上级用户名
-        phone: '', //手机
-        createtime: '', //创建时间
-        updatetime: new Date(), //更新时间
-        money: 0, //消费 
-        remark: 0, //备注 
+      addUserTemp: {
+        username:undefined,
+        password:undefined,
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
@@ -271,10 +179,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          addOrder(this.temp).then(() => {
-            this.getList()
+          addUserInfo(this.addUserTemp).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',

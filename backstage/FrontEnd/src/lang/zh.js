@@ -5,6 +5,7 @@ export default {
         userList: '用户列表',
         orderList: '订单列表',
         lowerLevelUser: '下级查询',
+        testHtml: '测试页面',
         logManagement: '日志管理',
         logLogin: '登录日志',
         logError: '错误日志',

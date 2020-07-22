@@ -1,4 +1,4 @@
-port=7777
+port=7766
 #根据端口号查询对应的pid
 pid=$(netstat -nlp | grep :$port | awk '{print $7}' | awk -F"/" '{ print $1 }');
 

@@ -113,9 +113,9 @@ export const asyncRoutes = [{
                 meta: { title: 'orderList', noCache: true }
             },
             {
-                path: 'lowerlevel-list',
+                path: 'user-brance',
                 component: () =>
-                    import ('@/views/user-information/lowerlevel-list'),
+                    import ('@/views/user-information/user-brance'),
                 name: 'LowerLevelUser',
                 meta: { title: 'lowerLevelUser', noCache: true }
             },

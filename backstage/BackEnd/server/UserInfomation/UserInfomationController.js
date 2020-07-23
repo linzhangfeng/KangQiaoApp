@@ -233,3 +233,47 @@ exports.addUser = function(req, res) {
         }, tagName);
     }
 }
+
+//查询二级用户
+exports.getChildUserList = function(req, res) {
+    if (req.url == '/getChildUserList') {
+        var tagName = "getChildUserList";
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            //验证用户
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+            if (recvData['userName']) sql_obj['UI_NickName'] = Utils.toSqlString(recvData['userName']);
+
+            if (recvData['childType'] == 1) {
+                if (recvData['userId']) sql_obj['UI_ParentID'] = recvData['userId'];
+            } else if (recvData['childType'] == 2) {
+                if (recvData['userId']) sql_obj['UI_PParentID'] = recvData['userId'];
+            } else {
+                if (recvData['userId']) sql_obj['UI_ID'] = recvData['userId'];
+            }
+
+            if (recvData['phone']) sql_obj['UI_Phone'] = recvData['phone'];
+            if (recvData['userAccount']) sql_obj['UA_Name'] = recvData['userAccount'];
+
+            sql_obj['pageSize'] = 20;
+            sql_obj['page'] = 1;
+            if (recvData['limit']) sql_obj['pageSize'] = recvData['limit'];
+            if (recvData['page']) sql_obj['page'] = recvData['page'];
+            sql_obj['startRow'] = (sql_obj['page'] - 1) * sql_obj['pageSize'];
+            m_db.find_user_two_child_count(sql_obj, function(countData) {
+                var totalCount = countData[0]['count(*)'];
+                console.log('lin=find_user_two_child_count:' + totalCount);
+                m_db.find_user_two_child_list(sql_obj, function(data) {
+                    res_data['list'] = data;
+                    res_data['totalCount'] = totalCount;
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                }, function() {
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                });
+            })
+        }, tagName);
+    }
+}

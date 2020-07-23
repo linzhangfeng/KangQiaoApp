@@ -165,3 +165,117 @@ exports.add_user_info = function(objectArr, success, failure) {
     }
     m_db.execute(sqls, success, failure);
 }
+
+
+//查询一级子节点
+exports.find_user_child_list = function(object, success, failure) {
+        var sql = 'SELECT child.UI_Gold,child.UI_ID,User_Account.UA_Name,child.UI_Phone,child.CreateTime,child.UpdateTime,child.UI_NickName,parent.UI_NickName AS Parent_NickName,account.UA_Name AS Parent_UserName ';
+        sql += 'FROM User_Account,User_Info child Left JOIN User_Info parent ON parent.UI_ID = child.UI_ParentID Left JOIN User_Account account ON parent.UA_ID = account.UA_ID ';
+        sql += 'where User_Account.UA_ID = child.UA_ID and child.UI_State = 0 ';
+        if (object['UI_ID'] || object['UI_NickName'] || object['UI_Phone'] || object['UA_Name'] || object['CreateTime']) {
+            if (object['UI_NickName']) {
+                var temp_sql = ' and child.UI_NickName = ' + object['UI_NickName'];
+                sql += temp_sql;
+            }
+
+            if (object['UI_Phone']) {
+                var temp_sql = ' and child.UI_Phone = ' + object['UI_Phone'];
+                sql += temp_sql;
+            }
+
+            if (object['UI_ID']) {
+                var temp_sql = ' and child.UI_ID = ' + object['UI_ID'];
+                sql += temp_sql;
+            }
+
+            if (object['UA_Name']) {
+                var temp_sql = ' and User_Account.UA_Name = ' + object['UA_Name'];
+                sql += temp_sql;
+            }
+
+            if (object['UI_ParentID']) {
+                var temp_sql = ' and child.UI_ParentID = ' + object['UI_ParentID'];
+                sql += temp_sql;
+            }
+
+            if (object['CreateTime']) {
+                var temp_sql = ' and date_format([child.CreateTime],"%Y-%m-%d") = to_days(' + object['CreateTime'] + ') ';
+                sql += temp_sql;
+            }
+        }
+        if (object['startRow'] && object['pageSize']) {
+            sql += ' ORDER BY child.CreateTime DESC ';
+            sql += 'LIMIT ' + object['startRow'] + ',' + object['pageSize'];
+        }
+
+        m_db.query(sql, success, failure);
+    }
+    //查询二级子节点个数
+exports.find_user_two_child_count = function(object, success, failure) {
+    var sql = 'SELECT count(*)';
+    sql += 'FROM User_Account,User_Info child '
+    sql += 'Left JOIN User_Info parent ON parent.UI_ID = child.UI_ParentID  '
+    sql += 'Left JOIN User_Info pparent ON pparent.UI_ID = parent.UI_ParentID  '
+    sql += 'Left JOIN User_Account account ON parent.UA_ID = account.UA_ID ';
+    sql += 'where User_Account.UA_ID = child.UA_ID and child.UI_State = 0 ';
+    if (object['UI_ParentID']) {
+        if (object['UI_ParentID']) {
+            var temp_sql = ' and pparent.UI_ParentID = ' + object['UI_ParentID'];
+            sql += temp_sql;
+        }
+    }
+
+    m_db.query(sql, success, failure);
+}
+
+//查询二级子节点
+exports.find_user_two_child_list = function(object, success, failure) {
+    var sql = 'SELECT child.UI_Gold,child.UI_ID,User_Account.UA_Name,child.UI_Phone,child.CreateTime,child.UpdateTime,child.UI_NickName,parent.UI_NickName AS Parent_NickName,account.UA_Name AS Parent_UserName ';
+    sql += 'FROM User_Account,User_Info child '
+    sql += 'Left JOIN User_Info parent ON parent.UI_ID = child.UI_ParentID  '
+    if (object['UI_PParentID']) sql += 'Left JOIN User_Info pparent ON pparent.UI_ID = parent.UI_ParentID '
+    sql += 'Left JOIN User_Account account ON parent.UA_ID = account.UA_ID ';
+    sql += 'where User_Account.UA_ID = child.UA_ID and child.UI_State = 0 ';
+    if (object['UI_ID'] || object['UI_NickName'] || object['UI_Phone'] || object['UA_Name'] || object['CreateTime'] || object['UI_ParentID'] || object['UI_PParentID']) {
+        if (object['UI_NickName']) {
+            var temp_sql = ' and child.UI_NickName = ' + object['UI_NickName'];
+            sql += temp_sql;
+        }
+
+        if (object['UI_Phone']) {
+            var temp_sql = ' and child.UI_Phone = ' + object['UI_Phone'];
+            sql += temp_sql;
+        }
+
+        if (object['UI_ID']) {
+            var temp_sql = ' and child.UI_ID = ' + object['UI_ID'];
+            sql += temp_sql;
+        }
+
+        if (object['UA_Name']) {
+            var temp_sql = ' and User_Account.UA_Name = ' + object['UA_Name'];
+            sql += temp_sql;
+        }
+
+        if (object['UI_ParentID']) {
+            var temp_sql = ' and parent.UI_ID = ' + object['UI_ParentID'];
+            sql += temp_sql;
+        }
+
+        if (object['UI_PParentID']) {
+            var temp_sql = ' and pparent.UI_ID = ' + object['UI_PParentID'];
+            sql += temp_sql;
+        }
+
+        if (object['CreateTime']) {
+            var temp_sql = ' and date_format([child.CreateTime],"%Y-%m-%d") = to_days(' + object['CreateTime'] + ') ';
+            sql += temp_sql;
+        }
+    }
+    if (object['startRow'] && object['pageSize']) {
+        sql += ' ORDER BY child.CreateTime DESC ';
+        sql += 'LIMIT ' + object['startRow'] + ',' + object['pageSize'];
+    }
+
+    m_db.query(sql, success, failure);
+}

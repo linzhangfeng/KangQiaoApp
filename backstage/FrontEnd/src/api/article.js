@@ -62,6 +62,14 @@ export function addUserInfo(data) {
     })
 }
 
+//查询子用户
+export function getChildUserList(data) {
+    return request({
+        url: '/getChildUserList',
+        method: 'post',
+        data
+    })
+}
 
 // userinformation-end
 

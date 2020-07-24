@@ -52,7 +52,7 @@ exports.query = function(sql, success, failure) {
     m_pool.getConnection(function(err, conn) {
         if (err) {
             if (err) {
-                if (failure) failure(err, fields);
+                if (failure) failure(err);
                 throw err;
             }
         } else {
@@ -70,6 +70,13 @@ exports.query = function(sql, success, failure) {
     });
 };
 
+exports.queryCount = function(success, failure) {
+    var sql = 'Select FOUND_ROWS()';
+    this.query(sql, function(data) {
+        var count = data[0]['FOUND_ROWS()'];
+        if (success) success(count);
+    }, failure);
+}
 
 exports.packageInSertSql = function(object) {
     var keyStr = '(';

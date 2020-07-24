@@ -140,24 +140,27 @@ exports.getUserList = function(req, res) {
             if (recvData['userId']) sql_obj['UI_ID'] = recvData['userId'];
             if (recvData['phone']) sql_obj['UI_Phone'] = recvData['phone'];
             if (recvData['userAccount']) sql_obj['UA_Name'] = recvData['userAccount'];
+            if (recvData['childType'] == 1) {
+                sql_obj['UI_ID'] = null;
+                if (recvData['userId']) sql_obj['UI_ParentID'] = recvData['userId'];
+            } else if (recvData['childType'] == 2) {
+                sql_obj['UI_ID'] = null;
+                if (recvData['userId']) sql_obj['UI_PParentID'] = recvData['userId'];
+            }
 
             sql_obj['pageSize'] = 20;
             sql_obj['page'] = 1;
             if (recvData['limit']) sql_obj['pageSize'] = recvData['limit'];
             if (recvData['page']) sql_obj['page'] = recvData['page'];
             sql_obj['startRow'] = (sql_obj['page'] - 1) * sql_obj['pageSize'];
-            m_db.find_user_count(sql_obj, function(countData) {
-                var totalCount = countData[0]['count(*)'];
-                m_db.find_user_info(sql_obj, function(data) {
-                    res_data['list'] = data;
-                    res_data['totalCount'] = totalCount;
-                    packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
-                    m_httpUtils.post_response(res, packageData, tag);
-                }, function() {
-                    packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
-                    m_httpUtils.post_response(res, packageData, tag);
-                });
-            })
+            m_db.find_user_info(sql_obj, function(data) {
+                res_data = data;
+                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            }, function() {
+                packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            });
         }, tagName);
     }
 }
@@ -261,19 +264,15 @@ exports.getChildUserList = function(req, res) {
             if (recvData['limit']) sql_obj['pageSize'] = recvData['limit'];
             if (recvData['page']) sql_obj['page'] = recvData['page'];
             sql_obj['startRow'] = (sql_obj['page'] - 1) * sql_obj['pageSize'];
-            m_db.find_user_two_child_count(sql_obj, function(countData) {
-                var totalCount = countData[0]['count(*)'];
-                console.log('lin=find_user_two_child_count:' + totalCount);
-                m_db.find_user_two_child_list(sql_obj, function(data) {
-                    res_data['list'] = data;
-                    res_data['totalCount'] = totalCount;
-                    packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
-                    m_httpUtils.post_response(res, packageData, tag);
-                }, function() {
-                    packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
-                    m_httpUtils.post_response(res, packageData, tag);
-                });
-            })
+
+            m_db.find_user_two_child_list(sql_obj, function(data) {
+                res_data = data;
+                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            }, function() {
+                packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            });
         }, tagName);
     }
 }

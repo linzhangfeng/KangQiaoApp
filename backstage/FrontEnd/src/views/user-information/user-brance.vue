@@ -9,7 +9,7 @@
         一级用户人数：{{childSum.oneChildSum}}
       </el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter(2)">
-        二级用户人数：{{childSum.oneChildSum}}
+        二级用户人数：{{childSum.twoChildSum}}
       </el-button>
     </div>
 
@@ -213,10 +213,11 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getChildUserList(this.listQuery).then(response => {
+      getUserList(this.listQuery).then(response => {
         var recv_data = response.data;
         this.list = packageUserInfoData(recv_data.list);
-        this.total =  recv_data.totalCount;
+        if(this.listQuery.childType == 1)this.childSum.oneChildSum =  recv_data.count;
+        if(this.listQuery.childType == 2)this.childSum.twoChildSum =  recv_data.count;
         setTimeout(() => {
           this.listLoading = false
         }, 0.5 * 1000)

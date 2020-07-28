@@ -43,33 +43,33 @@ window.GBaseComponent = cc.Class({
     update(dt) {
 
     },
-    setRootNode: function (rootNode) {
+    setRootNode: function(rootNode) {
         this.rootNode = rootNode;
     },
-    addBtnClick: function (btn) {
+    addBtnClick: function(btn) {
         let self = this;
         if (btn.name == "help") {
-            btn.on('touchstart', function () {
+            btn.on('touchstart', function() {
                 GUtils.setNodeVis(cc.find("helptip", self.rootNode), true);
             }, this);
-            btn.on('touchend', function () {
+            btn.on('touchend', function() {
                 GUtils.setNodeVis(cc.find("helptip", self.rootNode), false);
             }, this);
-            btn.on('touchcancel', function () {
+            btn.on('touchcancel', function() {
                 GUtils.setNodeVis(cc.find("helptip", self.rootNode), false);
             }, this);
         } else {
             btn.on('click', this.btnCallback, this);
         }
     },
-    btnCallback: function (event) {
+    btnCallback: function(event) {
         // cc.log("btnCallback:", event.node.name);
         // switch (event.node.name) {
         //     case  'BtnGameExit':
         //         break;
         // }
     },
-    findNode: function (path) {
+    findNode: function(path) {
         if (!this.rootNode) {
             cc.log("please set base rootNode");
             return null;

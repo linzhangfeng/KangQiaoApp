@@ -9,7 +9,7 @@
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
-    extends: GBaseComponent,
+    extends: cc.Component,
 
     properties: {
         // foo: {
@@ -31,35 +31,11 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
-        this.setRootNode(this.node);
-        this.initUI();
-        this.initData();
-    },
+    // onLoad () {},
 
-    initUI: function() {
-        cc.log("lin=initUI");
-        this.addBtnClick(this.findNode("LoginBtn"));
-    },
-    initData: function() {
-
-    },
-    btnCallback: function(event) {
-        cc.log("btnCallback:", event.node.name);
-        switch (event.node.name) {
-            case 'LoginBtn':
-                this.toGameHall();
-                break;
-        }
-    },
-    toGameHall: function() {
-        GSceneMgr.runScene("GameHall_v", true);
-    },
-    start() {
+    start () {
 
     },
 
-    update(dt) {
-
-    },
+    // update (dt) {},
 });

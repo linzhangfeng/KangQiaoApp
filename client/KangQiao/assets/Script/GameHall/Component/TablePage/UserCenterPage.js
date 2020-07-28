@@ -31,35 +31,35 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
-        this.setRootNode(this.node);
-        this.initUI();
+    onLoad () {
         this.initData();
+        this.initUI();
     },
 
-    initUI: function() {
-        cc.log("lin=initUI");
-        this.addBtnClick(this.findNode("LoginBtn"));
-    },
-    initData: function() {
+    start () {
 
     },
+
+    // update (dt) {},
+
+    initData(){
+
+    },
+
+    initUI(){
+        this.setRootNode(this.node);
+        this.addBtnClick(this.findNode("ContentLayout/UserInfo"));
+        this.addBtnClick(this.findNode("ContentLayout/SettingItem"));
+    },
+
     btnCallback: function(event) {
         cc.log("btnCallback:", event.node.name);
         switch (event.node.name) {
-            case 'LoginBtn':
-                this.toGameHall();
+            case  'UserInfo':
+                PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.UserInfo);
+                break;
+            case  'SettingItem':
                 break;
         }
-    },
-    toGameHall: function() {
-        GSceneMgr.runScene("GameHall_v", true);
-    },
-    start() {
-
-    },
-
-    update(dt) {
-
     },
 });

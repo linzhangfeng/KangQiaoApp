@@ -39,7 +39,7 @@ cc.Class({
     initUI: function () {
         this.setBarPercent(0);
     },
-    initData: function () {
+    initData: function () {``
 
     },
     start() {

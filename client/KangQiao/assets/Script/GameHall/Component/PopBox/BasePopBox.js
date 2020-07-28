@@ -32,34 +32,37 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        this.setRootNode(this.node);
-        this.initUI();
-        this.initData();
+        this._super();
     },
+    initData(){
+        this.topNode = null;
+        this.listenerFinish = null;
+    },
+    initUI(topNode){
+        this.topNode = topNode;
+        let backBtn = cc.find("BackBtn",this.topNode);
+        let finishBtn = this.findNode("FinishBtn",this.topNode);
 
-    initUI: function() {
-        cc.log("lin=initUI");
-        this.addBtnClick(this.findNode("LoginBtn"));
-    },
-    initData: function() {
-
-    },
-    btnCallback: function(event) {
-        cc.log("btnCallback:", event.node.name);
-        switch (event.node.name) {
-            case 'LoginBtn':
-                this.toGameHall();
-                break;
-        }
-    },
-    toGameHall: function() {
-        GSceneMgr.runScene("GameHall_v", true);
+        GUtils.addBtnClick(backBtn,function (event) {
+            GUtils.setNodeVis(this.node,false);
+        }.bind(this));
+        GUtils.addBtnClick(finishBtn,function (event) {
+            if(this.listenerFinish)this.listenerFinish();
+        }.bind(this));
     },
     start() {
 
     },
 
-    update(dt) {
-
+    addListenerFinish(listener){
+        this.listenerFinish = listener;
     },
+
+    setTitle(title) {
+        let headTitle = cc.find("HeadTitle",this.topNode);
+        GUtils.setLabelText(headTitle,title);
+    },
+
+
+    // update (dt) {},
 });

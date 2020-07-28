@@ -7,9 +7,9 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
+let BasePopBox = require("BasePopBox");
 cc.Class({
-    extends: GBaseComponent,
+    extends: BasePopBox,
 
     properties: {
         // foo: {
@@ -31,35 +31,27 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
-        this.setRootNode(this.node);
-        this.initUI();
+    onLoad () {
         this.initData();
+        this.initUI();
+        this._super();
     },
 
-    initUI: function() {
-        cc.log("lin=initUI");
-        this.addBtnClick(this.findNode("LoginBtn"));
-    },
-    initData: function() {
-
-    },
-    btnCallback: function(event) {
-        cc.log("btnCallback:", event.node.name);
-        switch (event.node.name) {
-            case 'LoginBtn':
-                this.toGameHall();
-                break;
-        }
-    },
-    toGameHall: function() {
-        GSceneMgr.runScene("GameHall_v", true);
-    },
-    start() {
+    start () {
 
     },
 
-    update(dt) {
+    initData(){
+        this._super();
 
     },
+    initUI(){
+        this.setRootNode(this.node);
+        let headNode = this.findNode("UserCenterHead");
+        this._super(headNode);
+        this.addListenerFinish(function () {
+
+        });
+    },
+    // update (dt) {},
 });

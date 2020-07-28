@@ -33,33 +33,35 @@ cc.Class({
 
     onLoad() {
         this.setRootNode(this.node);
-        this.initUI();
         this.initData();
+        this.initUI();
     },
 
-    initUI: function() {
-        cc.log("lin=initUI");
-        this.addBtnClick(this.findNode("LoginBtn"));
-    },
-    initData: function() {
-
-    },
-    btnCallback: function(event) {
-        cc.log("btnCallback:", event.node.name);
-        switch (event.node.name) {
-            case 'LoginBtn':
-                this.toGameHall();
-                break;
-        }
-    },
-    toGameHall: function() {
-        GSceneMgr.runScene("GameHall_v", true);
-    },
     start() {
 
     },
 
-    update(dt) {
+
+    initData: function() {
 
     },
+
+    initUI: function() {
+
+    },
+
+    setName: function(name) {
+        var node = this.findNode('name');
+        GUtils.setLabelText(node, name);
+    },
+
+    setMoney: function(money) {
+        var node = this.findNode('money');
+        GUtils.setLabelText(node, money);
+    },
+
+    setHeadSpriteFrame: function(spriteFrame) {
+
+    },
+    // update (dt) {},
 });

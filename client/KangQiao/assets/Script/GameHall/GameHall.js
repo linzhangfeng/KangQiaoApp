@@ -32,9 +32,20 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-
+        this.initData();
+        this.initUI();
     },
     initUI: function () {
+        this.setRootNode(this.node);
+        let popLayer = this.findNode("PopLayer");
+        PopBoxMgr.init(popLayer);
+
+        let tableLayer = this.findNode("TableLayer");
+        TableMgr.init(tableLayer);
+
+        let publicLayer = this.findNode("PublicLayer");
+        PublicMgr.init(publicLayer);
+
         this.addBtnClick(this.findNode("EnterGameBtn"));
     },
     btnCallback: function (event) {

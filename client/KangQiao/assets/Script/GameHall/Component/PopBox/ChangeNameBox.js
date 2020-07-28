@@ -7,9 +7,9 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
+let BasePopBox = require("BasePopBox");
 cc.Class({
-    extends: GBaseComponent,
+    extends: BasePopBox,
 
     properties: {
         // foo: {
@@ -31,38 +31,33 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
+    onLoad () {
+        this.initData();
+        this.initUI();
         this._super();
     },
+
+    start () {
+
+    },
+
     initData(){
-        this.topNode = null;
-        this.listenerFinish = null;
-    },
-    initUI(topNode){
-        this.topNode = topNode;
-        let backBtn = cc.find("BackBtn",this.topNode);
-        let finishBtn = this.findNode("FinishBtn",this.topNode);
+        this._super();
 
-        GUtils.addBtnClick(backBtn,function (event) {
-            GUtils.setNodeVis(this.node,false);
+    },
+    initUI(){
+        this.setRootNode(this.node);
+        let headNode = this.findNode("UserCenterHead");
+        this._super(headNode);
+        this.addListenerFinish(function () {
+            PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.None);
         }.bind(this));
-        GUtils.addBtnClick(finishBtn,function (event) {
-            if(this.listenerFinish)this.listenerFinish();
-        }.bind(this));
-    },
-    start() {
 
+        let userInfoItem_1 = this.findNode("UserInfoLayout/UserInfoItem_1");
+        GUtils.addBtnClick(userInfoItem_1,function () {
+            PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.ChangeName);
+        })
     },
-
-    addListenerFinish(listener){
-        this.listenerFinish = listener;
-    },
-
-    setTitle(title) {
-        let headTitle = cc.find("HeadTitle",this.topNode);
-        GUtils.setLabelText(headTitle,title);
-    },
-
 
     // update (dt) {},
 });

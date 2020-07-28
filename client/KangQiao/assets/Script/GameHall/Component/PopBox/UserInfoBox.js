@@ -50,8 +50,14 @@ cc.Class({
         let headNode = this.findNode("UserCenterHead");
         this._super(headNode);
         this.addListenerFinish(function () {
+            PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.None);
+        }.bind(this));
 
-        });
+        let userInfoItem_1 = this.findNode("UserInfoLayout/UserInfoItem_1");
+        GUtils.addBtnClick(userInfoItem_1,function () {
+            PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.ChangeName);
+        })
     },
+
     // update (dt) {},
 });

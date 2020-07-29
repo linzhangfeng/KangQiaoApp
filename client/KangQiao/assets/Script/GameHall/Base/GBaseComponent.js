@@ -76,16 +76,18 @@ window.GBaseComponent = cc.Class({
         }
         let node = cc.find(path, this.rootNode);
         if (!node) {
-            cc.log("find node url:" + path + " fail");
+            cc.error("find node url:" + path + " fail");
         }
         return node;
     },
 
     hide() {
+        console.log("lin=hide:"+this.tag);
         GUtils.setNodeVis(this.node, false);
     },
 
     show() {
+        console.log("lin=show:"+this.tag);
         GUtils.setNodeVis(this.node, true);
     }
 });

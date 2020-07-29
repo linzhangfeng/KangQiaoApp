@@ -32,12 +32,12 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.initData();
-        this.initUI();
+
     },
 
     start () {
-
+        this.initData();
+        this.initUI();
     },
 
     // update (dt) {},
@@ -56,7 +56,7 @@ cc.Class({
         cc.log("btnCallback:", event.node.name);
         switch (event.node.name) {
             case  'UserInfo':
-                PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.UserInfo);
+                PopBoxMgr.showUserInfoBox();
                 break;
             case  'SettingItem':
                 break;

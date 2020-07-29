@@ -7,11 +7,12 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-let BasePopBox = require("BasePopBox");
+let BasePopBox = require("BaseBox");
 cc.Class({
     extends: BasePopBox,
 
     properties: {
+        tag:"UserInfoBox",
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -32,30 +33,31 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.initData();
-        this.initUI();
-        this._super();
+        console.log("lin=onLoad:"+ this.tag);
     },
 
     start () {
-
+        console.log("lin=start:"+ this.tag);
+        this.initData();
+        this.initUI();
     },
 
     initData(){
-        this._super();
+        // this._super();
 
     },
     initUI(){
         this.setRootNode(this.node);
-        let headNode = this.findNode("UserCenterHead");
+        let headNode = this.findNode("PopHead");
         this._super(headNode);
-        this.addListenerFinish(function () {
-            PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.None);
-        }.bind(this));
 
-        let userInfoItem_1 = this.findNode("UserInfoLayout/UserInfoItem_1");
-        GUtils.addBtnClick(userInfoItem_1,function () {
-            PopBoxMgr.showUserCenter(PopBoxMgr.UserCenter.ChangeName);
+        // this.addListenerFinish(function () {
+        //
+        // }.bind(this));
+
+        let userInfoItem = this.findNode("ContentLayout/UserInfoItem_1");
+        GUtils.addBtnClick(userInfoItem,function () {
+           PopBoxMgr.showChangeNameBox();
         })
     },
 

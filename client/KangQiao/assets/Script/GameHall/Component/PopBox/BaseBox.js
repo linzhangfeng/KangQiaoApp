@@ -32,7 +32,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        this._super();
+        // this._super();
     },
     initData(){
         this.topNode = null;
@@ -63,14 +63,6 @@ cc.Class({
     setFinishBtnVis(v){
         let finishBtn = cc.find("FinishBtn",this.topNode);
         GUtils.setNodeVis(finishBtn,v);
-    },
-
-    show(){
-        GUtils.setNodeVis(this.rootNode,true);
-    },
-
-    hide(){
-        GUtils.setNodeVis(this.rootNode,false);
     },
 
     setTitle(title) {

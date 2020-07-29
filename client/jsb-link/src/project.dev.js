@@ -25,6 +25,91 @@ window.__require = function e(t, n, r) {
   for (var o = 0; o < r.length; o++) s(r[o]);
   return s;
 }({
+  BaseBox: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "0ac6fsYImNIE7x+6TFQGsg8", "BaseBox");
+    "use strict";
+    cc.Class({
+      extends: GBaseComponent,
+      properties: {},
+      onLoad: function onLoad() {},
+      initData: function initData() {
+        this.topNode = null;
+        this.listenerFinish = null;
+      },
+      initUI: function initUI(topNode) {
+        this.topNode = topNode;
+        var backBtn = cc.find("BackBtn", this.topNode);
+        var finishBtn = cc.find("FinishBtn", this.topNode);
+        GUtils.setNodeVis(finishBtn, false);
+        GUtils.addBtnClick(backBtn, function(event) {
+          GUtils.setNodeVis(this.node, false);
+        }.bind(this));
+        GUtils.addBtnClick(finishBtn, function(event) {
+          this.listenerFinish && this.listenerFinish();
+        }.bind(this));
+      },
+      start: function start() {},
+      addListenerFinish: function addListenerFinish(listener) {
+        this.listenerFinish = listener;
+        this.setFinishBtnVis(true);
+      },
+      setFinishBtnVis: function setFinishBtnVis(v) {
+        var finishBtn = cc.find("FinishBtn", this.topNode);
+        GUtils.setNodeVis(finishBtn, v);
+      },
+      setTitle: function setTitle(title) {
+        var headTitle = cc.find("HeadTitle", this.topNode);
+        GUtils.setLabelText(headTitle, title);
+      }
+    });
+    cc._RF.pop();
+  }, {} ],
+  ChangeNameBox: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "02e6aYzLM1D6LOMNNpfHBm1", "ChangeNameBox");
+    "use strict";
+    var BasePopBox = require("BaseBox");
+    cc.Class({
+      extends: BasePopBox,
+      properties: {},
+      onLoad: function onLoad() {
+        this.initData();
+        this.initUI();
+      },
+      start: function start() {},
+      initData: function initData() {},
+      initUI: function initUI() {
+        this.setRootNode(this.node);
+        var headNode = this.findNode("PopHead");
+        this._super(headNode);
+        this.addListenerFinish(function() {
+          PopBoxMgr.hideChangeNameBox();
+        }.bind(this));
+      }
+    });
+    cc._RF.pop();
+  }, {
+    BaseBox: "BaseBox"
+  } ],
+  Config: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "4b147zZKhRO8ZwLwz/j1jbW", "Config");
+    "use strict";
+    window.PageType = {
+      HomePage: 1,
+      TradePage: 2,
+      SpreadPage: 3,
+      UserCenterPage: 4
+    };
+    window.PageName = {
+      1: "\u9996\u9875",
+      2: "\u4ea4\u6613",
+      3: "\u63a8\u5e7f",
+      4: "\u6211\u7684"
+    };
+    cc._RF.pop();
+  }, {} ],
   Demo: [ function(require, module, exports) {
     "use strict";
     cc._RF.push(module, "18878zKbjlK6ZhWCxXZVtxU", "Demo");
@@ -415,13 +500,15 @@ window.__require = function e(t, n, r) {
           return null;
         }
         var node = cc.find(path, this.rootNode);
-        node || cc.log("find node url:" + path + " fail");
+        node || cc.error("find node url:" + path + " fail");
         return node;
       },
       hide: function hide() {
+        console.log("lin=hide:" + this.tag);
         GUtils.setNodeVis(this.node, false);
       },
       show: function show() {
+        console.log("lin=show:" + this.tag);
         GUtils.setNodeVis(this.node, true);
       }
     });
@@ -939,23 +1026,11 @@ window.__require = function e(t, n, r) {
       },
       toHall: function toHall() {
         GSceneMgr.runScene("GameHall");
-      }
-    };
-    window.setDesignResolutionSize = function(width, height, nodeCanvas) {
-      cc.log("lin=setDesignResolutionSize:width:" + width + " height:" + height);
-      var tempWdith = width;
-      var tempHeight = height;
-      2 != arguments.length;
-      var szieFrame = cc.view.getFrameSize();
-      if (cc.sys.isNative) if (szieFrame.width / szieFrame.height <= 16 / 9) {
-        if (nodeCanvas) {
-          nodeCanvas.addComponent(cc.Mask);
-          nodeCanvas.color = new cc.Color(255, 255, 255);
-        }
-        cc.view.setDesignResolutionSize(tempWdith, tempHeight, cc.ResolutionPolicy.FIXED_WIDTH);
-      } else cc.view.setDesignResolutionSize(tempWdith, tempHeight, cc.ResolutionPolicy.FIXED_HEIGHT); else {
-        cc.log("lin=setDesignResolutionSize:width2222:" + width + " height:" + height);
-        tempWdith > tempHeight ? cc.view.setDesignResolutionSize(tempWdith, tempHeight, cc.ResolutionPolicy.FIXED_HEIGHT) : cc.view.setDesignResolutionSize(tempWdith, tempHeight, cc.ResolutionPolicy.FIXED_WIDTH);
+      },
+      addBtnClick: function addBtnClick(btn, btnCallback) {
+        var self = this;
+        if (!btn) return;
+        btn.on("click", btnCallback, this);
       }
     };
     cc._RF.pop();
@@ -966,9 +1041,20 @@ window.__require = function e(t, n, r) {
     "use strict";
     cc.Class({
       extends: GBaseComponent,
-      properties: {},
-      onLoad: function onLoad() {},
+      properties: {
+        tag: "GameHall"
+      },
+      onLoad: function onLoad() {
+        console.log("lin=onLoad:" + this.tag);
+      },
       initUI: function initUI() {
+        this.setRootNode(this.node);
+        var popLayer = this.findNode("PopLayer");
+        PopBoxMgr.init(popLayer);
+        var tableLayer = this.findNode("TableLayer");
+        TableMgr.init(tableLayer);
+        var publicLayer = this.findNode("PublicLayer");
+        PublicMgr.init(publicLayer);
         this.addBtnClick(this.findNode("EnterGameBtn"));
       },
       btnCallback: function btnCallback(event) {
@@ -980,6 +1066,7 @@ window.__require = function e(t, n, r) {
       },
       initData: function initData() {},
       start: function start() {
+        console.log("lin=start:" + this.tag);
         this.setRootNode(this.node);
         this.initUI();
         this.initData();
@@ -1016,36 +1103,65 @@ window.__require = function e(t, n, r) {
         }
       },
       toGameHall: function toGameHall() {
-        GSceneMgr.runScene("GameHall_qiao", true);
+        GSceneMgr.runScene("GameHall_v", true);
       },
       start: function start() {},
       update: function update(dt) {}
     });
     cc._RF.pop();
   }, {} ],
-  JSCanvasDesignResolution: [ function(require, module, exports) {
+  HeadMgr: [ function(require, module, exports) {
     "use strict";
-    cc._RF.push(module, "be32ffGeYtH6bBAY2u+kQuw", "JSCanvasDesignResolution");
+    cc._RF.push(module, "6435f4aRjhF/r+i6qBEd+Aj", "HeadMgr");
+    "use strict";
+    var HeadMgr = {
+      rootNode: null,
+      init: function init(rootNode) {
+        this.rootNode = rootNode;
+        this.rootJs = node.getComponents("Head");
+      },
+      updateInfo: function updateInfo(playerData) {
+        this.rootJs.setName(playerData.name);
+        this.rootJs.setMoney(playerData.money);
+      }
+    };
+    cc._RF.pop();
+  }, {} ],
+  Head: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "3de00xpii5Ej77leENVeReW", "Head");
+    "use strict";
+    cc.Class({
+      extends: GBaseComponent,
+      properties: {},
+      onLoad: function onLoad() {
+        this.setRootNode(this.node);
+        this.initData();
+        this.initUI();
+      },
+      start: function start() {},
+      initData: function initData() {},
+      initUI: function initUI() {},
+      setName: function setName(name) {
+        var node = this.findNode("name");
+        GUtils.setLabelText(node, name);
+      },
+      setMoney: function setMoney(money) {
+        var node = this.findNode("money");
+        GUtils.setLabelText(node, money);
+      },
+      setHeadSpriteFrame: function setHeadSpriteFrame(spriteFrame) {}
+    });
+    cc._RF.pop();
+  }, {} ],
+  HomePage: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "ca479XtxC1PD7B2Z88I3H9l", "HomePage");
     "use strict";
     cc.Class({
       extends: cc.Component,
-      properties: {
-        nodeContent: cc.Node,
-        wGameWidth: 0,
-        wGameHeight: 0,
-        wScreenDir: cc.macro.ORIENTATION_LANDSCAPE
-      },
-      onLoad: function onLoad() {
-        if (cc.sys.isBrowser && "Windows" != cc.sys.os && "OS X" != cc.sys.os) {
-          this.wGameHeight > this.wGameWidth ? cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT) : cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-          cc.view._orientationChange();
-        } else if ("wechatgame" == cc.sys.browserType) {
-          this.OnRotationFrame();
-          this.wGameHeight > this.wGameWidth ? cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT) : cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-          cc.view._orientationChange();
-        }
-      },
-      onDestroy: function onDestroy() {}
+      properties: {},
+      start: function start() {}
     });
     cc._RF.pop();
   }, {} ],
@@ -1072,7 +1188,9 @@ window.__require = function e(t, n, r) {
       initUI: function initUI() {
         this.setBarPercent(0);
       },
-      initData: function initData() {},
+      initData: function initData() {
+        "";
+      },
       start: function start() {},
       update: function update(dt) {},
       setBarPercent: function setBarPercent(precent) {
@@ -1092,5 +1210,201 @@ window.__require = function e(t, n, r) {
       }
     });
     cc._RF.pop();
-  }, {} ]
-}, {}, [ "GBaseComponent", "JSCanvasDesignResolution", "GameHall", "GameLogin", "GHotUpdate", "GHotUpdateMgr", "JsTest", "LoadScene", "GSceneMgr", "GArrayUtils", "GUtils", "Demo" ]);
+  }, {} ],
+  PopBoxMgr: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "683f91/bXZDT6uN/SDT1ZjO", "PopBoxMgr");
+    "use strict";
+    window.PopBoxMgr = {
+      rootNode: null,
+      rootJs: null,
+      init: function init(rootNode) {
+        this.rootNode = rootNode;
+        GUtils.setNodeVis(this.rootNode, true);
+        var userInfoBox = cc.find("UserInfo", this.rootNode);
+        GUtils.setNodeVis(userInfoBox, false);
+        var changeNameBox = cc.find("ChangeName", this.rootNode);
+        GUtils.setNodeVis(changeNameBox, false);
+      },
+      showUserInfoBox: function showUserInfoBox() {
+        var box = cc.find("UserInfo", this.rootNode);
+        var jsBox = box.getComponent("UserInfoBox");
+        jsBox.show();
+      },
+      hideUserInfoBox: function hideUserInfoBox() {
+        var box = cc.find("UserInfo", this.rootNode);
+        var jsBox = box.getComponent("UserInfoBox");
+        jsBox.hide();
+      },
+      showChangeNameBox: function showChangeNameBox() {
+        var box = cc.find("ChangeName", this.rootNode);
+        var jsBox = box.getComponent("ChangeNameBox");
+        jsBox.show();
+      },
+      hideChangeNameBox: function hideChangeNameBox() {
+        var box = cc.find("ChangeName", this.rootNode);
+        var jsBox = box.getComponent("ChangeNameBox");
+        jsBox.show();
+      },
+      showUserCenter: function showUserCenter(type) {
+        var userCenterLayout = cc.find("UserCenterLayout", this.rootNode);
+        var jsUserCenterLayout = userCenterLayout.getComponent("UserCenterPopBox");
+        var userInfoLayout = cc.find("UserCenterLayout/UserInfoLayout", this.rootNode);
+        var changNameLayout = cc.find("UserCenterLayout/ChangeNameLayout", this.rootNode);
+        if (type == PopBoxMgr.UserCenter.None) {
+          GUtils.setNodeVis(userCenterLayout, false);
+          jsUserCenterLayout.return;
+        }
+        GUtils.setNodeVis(userCenterLayout, true);
+        GUtils.setNodeVis(userInfoLayout, PopBoxMgr.UserCenter.UserInfo == type);
+        GUtils.setNodeVis(changNameLayout, PopBoxMgr.UserCenter.ChangeName == type);
+      },
+      reset: function reset() {}
+    };
+    PopBoxMgr.UserCenter = {
+      None: -1,
+      ChangeName: 1,
+      UserInfo: 2
+    };
+    cc._RF.pop();
+  }, {} ],
+  PublicMgr: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "c65e4nGXsZL+IMpwQWBUW6S", "PublicMgr");
+    "use strict";
+    window.PublicMgr = {
+      tag: "PublicMgr",
+      rootNode: null,
+      rootJs: null,
+      init: function init(rootNode) {
+        this.rootNode = rootNode;
+        for (var key in PageType) {
+          var nodeName = "BottomNode/Button_" + PageType[key];
+          GUtils.addBtnClick(cc.find(nodeName, this.rootNode), this.btnCallback.bind(this));
+        }
+      },
+      btnCallback: function btnCallback(event) {
+        cc.log("btnCallback:", event.node.name);
+        var btnName = event.node.name;
+        if (-1 != btnName.indexOf("Button_")) {
+          var nameArr = btnName.split("_");
+          TableMgr.showPage(parseInt(nameArr[1]));
+          this.setTitleName(PageName[nameArr[1]]);
+        }
+      },
+      setTitleName: function setTitleName(titleName) {
+        var titleLabel = cc.find("HeadNode/Title", this.rootNode);
+        GUtils.setLabelText(titleLabel, titleName);
+      },
+      reset: function reset() {}
+    };
+    cc._RF.pop();
+  }, {} ],
+  SpreadPage: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "9e9054YVuJKmJPvhP9OByrO", "SpreadPage");
+    "use strict";
+    cc.Class({
+      extends: cc.Component,
+      properties: {},
+      start: function start() {}
+    });
+    cc._RF.pop();
+  }, {} ],
+  TableMgr: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "aa5d6Xka3FKzL0V0CdhY1EG", "TableMgr");
+    "use strict";
+    window.TableMgr = {
+      rootNode: null,
+      rootJs: null,
+      init: function init(rootNode) {
+        this.rootNode = rootNode;
+      },
+      showPage: function showPage(type) {
+        var homePage = cc.find("HomePageLayer", this.rootNode);
+        var OrderPage = cc.find("OrderPageLayer", this.rootNode);
+        var UserPage = cc.find("UserPageLayer", this.rootNode);
+        var SpreadPage = cc.find("SpreadPageLayer", this.rootNode);
+        GUtils.setNodeVis(homePage, PageType.HomePage == type);
+        GUtils.setNodeVis(OrderPage, PageType.TradePage == type);
+        GUtils.setNodeVis(UserPage, PageType.UserCenterPage == type);
+        GUtils.setNodeVis(SpreadPage, PageType.SpreadPage == type);
+      },
+      reset: function reset() {}
+    };
+    cc._RF.pop();
+  }, {} ],
+  TradePage: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "e236bTI8qdCYKGTXqX4OaQ9", "TradePage");
+    "use strict";
+    cc.Class({
+      extends: cc.Component,
+      properties: {},
+      start: function start() {}
+    });
+    cc._RF.pop();
+  }, {} ],
+  UserCenterPage: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "8df16flN+JJc6bTFtWxlEiK", "UserCenterPage");
+    "use strict";
+    cc.Class({
+      extends: GBaseComponent,
+      properties: {},
+      onLoad: function onLoad() {},
+      start: function start() {
+        this.initData();
+        this.initUI();
+      },
+      initData: function initData() {},
+      initUI: function initUI() {
+        this.setRootNode(this.node);
+        this.addBtnClick(this.findNode("ContentLayout/UserInfo"));
+        this.addBtnClick(this.findNode("ContentLayout/SettingItem"));
+      },
+      btnCallback: function btnCallback(event) {
+        cc.log("btnCallback:", event.node.name);
+        switch (event.node.name) {
+         case "UserInfo":
+          PopBoxMgr.showUserInfoBox();
+        }
+      }
+    });
+    cc._RF.pop();
+  }, {} ],
+  UserInfoBox: [ function(require, module, exports) {
+    "use strict";
+    cc._RF.push(module, "b091aSaNkhER5GnZYNeMW0r", "UserInfoBox");
+    "use strict";
+    var BasePopBox = require("BaseBox");
+    cc.Class({
+      extends: BasePopBox,
+      properties: {
+        tag: "UserInfoBox"
+      },
+      onLoad: function onLoad() {
+        console.log("lin=onLoad:" + this.tag);
+      },
+      start: function start() {
+        console.log("lin=start:" + this.tag);
+        this.initData();
+        this.initUI();
+      },
+      initData: function initData() {},
+      initUI: function initUI() {
+        this.setRootNode(this.node);
+        var headNode = this.findNode("PopHead");
+        this._super(headNode);
+        var userInfoItem = this.findNode("ContentLayout/UserInfoItem_1");
+        GUtils.addBtnClick(userInfoItem, function() {
+          PopBoxMgr.showChangeNameBox();
+        });
+      }
+    });
+    cc._RF.pop();
+  }, {
+    BaseBox: "BaseBox"
+  } ]
+}, {}, [ "GBaseComponent", "BaseBox", "ChangeNameBox", "UserInfoBox", "HomePage", "SpreadPage", "TradePage", "UserCenterPage", "Config", "GameHall", "GameLogin", "GHotUpdate", "GHotUpdateMgr", "JsTest", "LoadScene", "GSceneMgr", "PopBoxMgr", "PublicMgr", "TableMgr", "GArrayUtils", "GUtils", "Demo", "HeadMgr", "Head" ]);

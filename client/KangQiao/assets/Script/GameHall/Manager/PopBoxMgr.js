@@ -4,30 +4,32 @@ window.PopBoxMgr = {
     init(rootNode){
         this.rootNode = rootNode;
         GUtils.setNodeVis(this.rootNode,true);
-        this.showUserCenter(PopBoxMgr.UserCenter.None);
 
         //隐藏所有的弹框
         let userInfoBox = cc.find("UserInfo",this.rootNode);
         GUtils.setNodeVis(userInfoBox,false);
-        let changeName = cc.find("ChangeName",this.rootNode);
-        GUtils.setNodeVis(changeName,false);
+        let changeNameBox = cc.find("ChangeName",this.rootNode);
+        GUtils.setNodeVis(changeNameBox,false);
     },
-
     showUserInfoBox(){
-        let userInfoBox = cc.find("UserInfo",this.rootNode);
-        let jsUserInfoBox = userInfoBox.getComponent("UserInfoBox");
+        let box = cc.find("UserInfo",this.rootNode);
+        let jsBox = box.getComponent("UserInfoBox");
+        jsBox.show();
     },
     hideUserInfoBox(){
-        let userInfoBox = cc.find("UserInfo",this.rootNode);
-        let jsUserInfoBox = userInfoBox.getComponent("UserInfoBox");
+        let box = cc.find("UserInfo",this.rootNode);
+        let jsBox = box.getComponent("UserInfoBox");
+        jsBox.hide();
     },
     showChangeNameBox(){
-        let userInfoBox = cc.find("ChangeName",this.rootNode);
-        let jsUserInfoBox = userInfoBox.getComponent("ChangeNameBox");
+        let box = cc.find("ChangeName",this.rootNode);
+        let jsBox = box.getComponent("ChangeNameBox");
+        jsBox.show();
     },
     hideChangeNameBox(){
-        let userInfoBox = cc.find("ChangeName",this.rootNode);
-        let jsUserInfoBox = userInfoBox.getComponent("ChangeNameBox");
+        let box = cc.find("ChangeName",this.rootNode);
+        let jsBox = box.getComponent("ChangeNameBox");
+        jsBox.show();
     },
     showUserCenter(type){
         let userCenterLayout = cc.find("UserCenterLayout",this.rootNode);

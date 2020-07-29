@@ -12,6 +12,7 @@ cc.Class({
     extends: GBaseComponent,
 
     properties: {
+        tag:"GameHall",
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -32,8 +33,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        this.initData();
-        this.initUI();
+        console.log("lin=onLoad:"+this.tag);
     },
     initUI: function () {
         this.setRootNode(this.node);
@@ -61,6 +61,7 @@ cc.Class({
     },
 
     start() {
+        console.log("lin=start:"+this.tag);
         this.setRootNode(this.node);
         this.initUI();
         this.initData();

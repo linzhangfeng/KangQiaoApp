@@ -40,7 +40,21 @@ cc.Class({
     initUI: function() {
         cc.log("lin=initUI");
         this.addBtnClick(this.findNode("LoginBtn"));
+        let loginLayout = this.findNode("LoginLayout");
+        let registerLayout = this.findNode("RegisterLayout");
+        GUtils.setNodeVis(loginLayout,false);
+        GUtils.setNodeVis(registerLayout,false);
+
+        this.addBtnClick(cc.find("LoginBtn",loginLayout));
+        this.addBtnClick(cc.find("ForgetPasswordBtn",loginLayout));
+        this.addBtnClick(cc.find("RegisterBtn",loginLayout));
+
+        this.addBtnClick(cc.find("VerificationCodeBtn",registerLayout));
+        this.addBtnClick(cc.find("StartRegisterBtn",registerLayout));
+
+        this.showLogin();
     },
+
     initData: function() {
 
     },
@@ -49,6 +63,20 @@ cc.Class({
         switch (event.node.name) {
             case 'LoginBtn':
                 this.toGameHall();
+                break;
+            case 'ForgetPasswordBtn':
+                this.toGameHall();
+                break;
+            case 'RegisterBtn':
+                this.showRegister();
+                this.hideLogin();
+                break;
+            case 'VerificationCodeBtn':
+                this.toGameHall();
+                break;
+            case 'StartRegisterBtn':
+                this.hideRegister();
+                this.showLogin();
                 break;
         }
     },
@@ -59,6 +87,24 @@ cc.Class({
 
     },
 
+    showRegister(){
+        let registerLayout = this.findNode("RegisterLayout");
+        GUtils.setNodeVis(registerLayout,true);
+
+    },
+    hideRegister(){
+        let registerLayout = this.findNode("RegisterLayout");
+        GUtils.setNodeVis(registerLayout,false);
+    },
+    showLogin(){
+        let loginLayout = this.findNode("LoginLayout");
+        GUtils.setNodeVis(loginLayout,true);
+
+    },
+    hideLogin(){
+        let loginLayout = this.findNode("LoginLayout");
+        GUtils.setNodeVis(loginLayout,false);
+    },
     update(dt) {
 
     },

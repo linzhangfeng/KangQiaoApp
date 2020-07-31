@@ -62,7 +62,8 @@ cc.Class({
         cc.log("btnCallback:", event.node.name);
         switch (event.node.name) {
             case 'LoginBtn':
-                this.toGameHall();
+                this.testHttp();
+                // this.toGameHall();
                 break;
             case 'ForgetPasswordBtn':
                 this.toGameHall();
@@ -79,6 +80,16 @@ cc.Class({
                 this.showLogin();
                 break;
         }
+    },
+    
+    //测试网络接口
+    testHttp:function(){
+        GHttp.apiurl = "http://localhost:7767/";
+        GHttp.sendHttp("getVerifitionCode",{
+            phone:"13617313041"
+        },function (data) {
+            console.log("lin=getVerifitionCode:",JSON.stringify(data));
+        },5000);
     },
     toGameHall: function() {
         GSceneMgr.runScene("GameHall_v", true);

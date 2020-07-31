@@ -14,6 +14,8 @@ var ErrorCode = {
     UpdateDetailsError: 305,
     FindSumCostError: 306,
     UserNameHasExist: 307,
+    VerificationOverDue: 308,
+    PhoneHasExist: 309,
 }
 
 var ErrorCodeMsg = {
@@ -26,6 +28,8 @@ var ErrorCodeMsg = {
     '305': '更新订单失败',
     '306': '查询总消费金额失败',
     '307': '用户名已被注册',
+    "308": '验证码过期',
+    "309": '手机号码已被注册',
 }
 exports.ErrorCodeMsg = ErrorCodeMsg;
 exports.ErrorCode = ErrorCode;

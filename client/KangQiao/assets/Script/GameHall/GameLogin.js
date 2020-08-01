@@ -85,12 +85,37 @@ cc.Class({
     //测试网络接口
     testHttp:function(){
         GHttp.apiurl = "http://localhost:7767/";
-        GHttp.sendHttp("getVerifitionCode",{
-            phone:"13617313041"
+
+        // GHttp.sendHttp("getVerifitionCode",{
+        //     phone:"13617313041"
+        // },function (data) {
+        //     console.log("lin=getVerifitionCode:",JSON.stringify(data));
+        // },5000);
+
+        GHttp.sendHttp("userRegister",{
+            phone:"13617313041",
+            verificationCode:"6209",
+            username:"linzf",
+            password:"password",
         },function (data) {
             console.log("lin=getVerifitionCode:",JSON.stringify(data));
         },5000);
+
+        // GHttp.sendHttp("userLogin",{
+        //     username:"linzf",
+        //     password:"password",
+        // },function (data) {
+        //     console.log("lin=getVerifitionCode:",JSON.stringify(data));
+        // },5000);
+
+        // GHttp.sendHttp("getUserInfo",{
+        //     token:"7c6ba7ca42ae7eb35b92845998fa5878",
+        // },function (data) {
+        //     console.log("lin=getVerifitionCode:",JSON.stringify(data));
+        // },5000);
     },
+
+
     toGameHall: function() {
         GSceneMgr.runScene("GameHall_v", true);
     },

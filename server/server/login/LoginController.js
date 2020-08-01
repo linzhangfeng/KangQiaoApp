@@ -9,28 +9,67 @@ var compressing = require('compressing');
 const { userInfo } = require('os');
 
 
-//登陆请求
-exports.user_login = function(req, res) {
-    if (req.url == '/manager_login') {
-        var tagName = "manager_login";
+//获取用户信息
+exports.getUserInfo = function(req, res){
+    if (req.url == '/getUserInfo') {
+        var tagName = "getUserInfo";
         m_httpUtils.post_receive(req, function(recvData, tag) {
-            //验证用户
             var sql_obj = {};
             var res_data = {};
-            sql_obj['SA_Account'] = Utils.toSqlString(recvData['username']);
-            m_db.find_user_data(sql_obj, function(userDataArr) {
-                var sendData = null;
-                var userData = userDataArr[0];
-                if (userData && userData['SA_Password'] == recvData['password']) {
-                    res_data['token'] = userData['SA_Token'];
-                    sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
-                } else {
-                    sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.UsernameError, res_data);
+            var packageData = null;
+            sql_obj["UI_Token"] =  Utils.toSqlString(recvData['token']);
+            //获取用户信息
+            m_db.find_user_info_data(sql_obj,function(userInfoData){
+                if(userInfoData.length > 0){
+                    res_data["userdata"]= userInfoData[0];
+                    packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                }else{
+                    //用户不存在
+                    packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.UserInfoNotFound, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
                 }
-                m_httpUtils.post_response(res, sendData, tag);
-            }, function() {
-                sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.FindUserInfoError, res_data);
-                m_httpUtils.post_response(res, sendData, tag);
+            });
+
+        }, tagName);
+    }
+}
+
+//登陆请求
+exports.userLogin = function(req, res) {
+    if (req.url == '/userLogin') {
+        var tagName = "userLogin";
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+            sql_obj["UA_Name"] =  Utils.toSqlString(recvData['username']);
+            //获取用户信息
+            m_db.find_login_user_data(sql_obj,function(loginData){
+                if(loginData.length > 0){
+                    //验证密码
+                     if(loginData[0]["UA_Password"] == recvData['password']){
+                        //生成一个新的token
+                        var token = Utils.createTokens();
+                        var token_sql = {};
+                        token_sql["UI_Token"] = Utils.toSqlString(token);
+                        token_sql["UI_ID"] = loginData[0]["UI_ID"];
+                        m_db.update_user_token([token_sql],function(){
+                            //返回给用户
+                            res_data["token"] = token;
+                            packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
+                            m_httpUtils.post_response(res, packageData, tag);
+                        })
+                     }else{
+                        //密码错误
+                        packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.PasswordError, res_data);
+                        m_httpUtils.post_response(res, packageData, tag);
+                     }
+                }else{
+                    //用户不存在
+                    packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.UserInfoNotFound, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                }
             });
 
         }, tagName);
@@ -38,9 +77,9 @@ exports.user_login = function(req, res) {
 }
 
 //用户注册
-exports.user_register = function(req, res) {
-    if (req.url == '/user_register') {
-        var tagName = "user_register";
+exports.userRegister = function(req, res) {
+    if (req.url == '/userRegister') {
+        var tagName = "userRegister";
         m_httpUtils.post_receive(req, function(recvData, tag) {
             var sql_obj = {};
             var res_data = {};
@@ -51,6 +90,7 @@ exports.user_register = function(req, res) {
                 if (codeData.length > 0 && Utils.isValidVerificationCode(codeData[0]["UpdateTime"])) {
                     //2 检测手机号码是否已经注册
                     sql_obj["UI_Phone"] = Utils.toSqlString(recvData['phone']);
+                    sql_obj["UA_Name"] = Utils.toSqlString(recvData['username']);
                     m_db.find_user_info_data(sql_obj, function(userInfoData) {
                         if (userInfoData.length == 0) {
                             m_db.find_user_account_data(sql_obj, function(accountData) {
@@ -58,10 +98,10 @@ exports.user_register = function(req, res) {
                                     //4 开始添加用户
                                     var account_sql_obj = {};
                                     account_sql_obj["UA_Password"] = Utils.toSqlString(recvData["password"]);
-                                    account_sql_obj["UA_Name"] = Utils.toSqlString(recvData["userNmae"]);
+                                    account_sql_obj["UA_Name"] = Utils.toSqlString(recvData["username"]);
                                     account_sql_obj['CreateTime'] = 'NOW()';
                                     account_sql_obj['UpdateTime'] = 'NOW()';
-                                    m_db.add_user_account(account_sql_obj, function(addAccountData) {
+                                    m_db.add_user_account([account_sql_obj], function(addAccountData) {
                                         //5 生成用户信息
                                         var user_sql_obj = {};
                                         user_sql_obj['UA_ID'] = addAccountData.insertId;
@@ -69,28 +109,28 @@ exports.user_register = function(req, res) {
                                         user_sql_obj['UI_NickName'] = Utils.toSqlString(recvData['phone']);
                                         user_sql_obj['CreateTime'] = 'NOW()';
                                         user_sql_obj['UpdateTime'] = 'NOW()';
-                                        m_db.add_user_info(user_sql_obj, function(addUserInfo) {
+                                        m_db.add_user_info([user_sql_obj], function(addUserInfo) {
                                             //用户注册成功
-                                            sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
-                                            m_httpUtils.post_response(res, sendData, tag);
+                                            packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
+                                            m_httpUtils.post_response(res, packageData, tag);
                                         });
                                     })
                                 } else {
                                     //3 检测用户名是否已注册
-                                    sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.UserNameHasExist, res_data);
-                                    m_httpUtils.post_response(res, sendData, tag);
+                                    packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.UserNameHasExist, res_data);
+                                    m_httpUtils.post_response(res, packageData, tag);
                                 }
                             })
                         } else {
                             //手机号已经被注册
-                            sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.PhoneHasExist, res_data);
-                            m_httpUtils.post_response(res, sendData, tag);
+                            packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.PhoneHasExist, res_data);
+                            m_httpUtils.post_response(res, packageData, tag);
                         }
                     });
                 } else {
                     //验证码已过期
-                    sendData = m_resultData.create(ErrorCodeConfig.ErrorCode.VerificationOverDue, res_data);
-                    m_httpUtils.post_response(res, sendData, tag);
+                    packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.VerificationOverDue, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
                 }
             });
         }, tagName);

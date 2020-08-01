@@ -17,7 +17,7 @@ app.all("*", function(req, res, next) {
     //设置允许跨域的域名，*代表允许任意域名跨域
     res.header("Access-Control-Allow-Origin", "*");
     //允许的header类型
-    res.header("Access-Control-Allow-Headers", "content-type,Access-Token,x-token,charset,X-PkgName,X-App,X-Channel,X-Device,fromType");
+    res.header("Access-Control-Allow-Headers", "content-type,Access-Token,x-token,charset,x-ijt,X-PkgName,X-App,X-Channel,X-Device,fromType");
     //跨域允许的请求方式 
     res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
     if (req.method.toLowerCase() == 'options')
@@ -33,6 +33,9 @@ app.post('/hotupdateCheck', g_upLoadCtl.hotupdateCheck);
 
 //login begin
 app.post('/getVerifitionCode', g_login.getVerifitionCode);
+app.post('/userRegister', g_login.userRegister);
+app.post('/userLogin', g_login.userLogin);
+app.post('/getUserInfo', g_login.getUserInfo);
 //login end
 
 //dashboard begin

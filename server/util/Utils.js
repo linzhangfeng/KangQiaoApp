@@ -1,5 +1,5 @@
 //单独处理聊天数据
-
+var md5 = require('md5-node');
 exports.copyObject = function (obj) {
     var newobj = {};
     for (var attr in obj) {
@@ -33,4 +33,17 @@ exports.createVerificationCode = function () {
         value = value + charactors.charAt(i);
     }
     return value;
+}
+
+//创建一个token
+exports.createTokens = function(leng){
+    leng = leng==undefined?32:leng	//如果没设置token长度自动为32位
+    //预设随机字符串
+    let chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz23456789'
+    let token = ''
+    //以长度单位进行循环
+    for(let i=0;i<leng;++i){
+        token+=chars.charAt(Math.floor(Math.random()*chars.length))
+    }
+    return md5(token)	///返回之前使用md5加密一下
 }

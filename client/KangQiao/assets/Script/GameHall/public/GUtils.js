@@ -291,4 +291,19 @@ window.GUtils = {
         if (!btn) return;
         btn.on('click', btnCallback, this);
     },
+    checkMobile: function (s) {
+        let length = s.length;
+        if (length == 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(14[0-9]{1})|)+\d{8})$/.test(s)) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    copyObject: function (obj) {
+        var newobj = {};
+        for (var attr in obj) {
+            newobj[attr] = obj[attr];
+        }
+        return newobj;
+    }
 };

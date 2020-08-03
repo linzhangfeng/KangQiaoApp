@@ -2,11 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c1f9471e-3145-4004-9ef7-ae1585364e05" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/GameHall_v.fire" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/GameHall_v.fire" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/LoginScene.fire" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/LoginScene.fire" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/UserCenterPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/UserCenterPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameHall.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameHall.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameLogin.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameLogin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Manager/PopBoxMgr.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Manager/PopBoxMgr.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GHttp.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GHttp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GUtils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/login/DataBaseMgr.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/login/DataBaseMgr.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/login/LoginController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/login/LoginController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/Utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/Utils.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -43,10 +50,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/login/LoginController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="88" column="22" lean-forward="true" selection-start-line="88" selection-start-column="22" selection-end-line="88" selection-end-column="22" />
+            <state relative-caret-position="257">
+              <caret line="173" column="14" selection-start-line="173" selection-start-column="14" selection-end-line="173" selection-end-column="14" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/UserInfomation/DataBaseMgr.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/UserInfomation/UserInfomationController.js">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -65,7 +82,11 @@
       <find>createtime</find>
       <find>update</find>
       <find>add_verification_code</find>
+      <find>cc.director</find>
     </findStrings>
+    <dirStrings>
+      <dir>F:\linzhangfeng\my_github\KangQiaoApp\server\server</dir>
+    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -82,9 +103,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="437" />
-    <option name="y" value="116" />
-    <option name="width" value="1357" />
+    <option name="y" value="42" />
+    <option name="width" value="1080" />
     <option name="height" value="998" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -131,7 +151,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/server/app.js" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../svn_work/assets" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -163,20 +183,29 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596164531430</updated>
-      <workItem from="1596164533160" duration="10307000" />
+      <workItem from="1596164533160" duration="13728000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10307000" />
+    <option name="totallyTimeSpent" value="13728000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="437" y="116" width="1357" height="998" extended-state="0" />
+    <frame x="0" y="42" width="1080" height="998" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="npm" side_tool="true" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12585291" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23992322" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" />
@@ -185,10 +214,10 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3290993" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.483237" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.233526" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" visible="true" weight="0.32947975" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -196,24 +225,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/server/login/LoginController.js</url>
-          <line>83</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/server/login/LoginController.js</url>
-          <line>84</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/remind.txt">
@@ -232,12 +243,6 @@
           <caret line="27" column="30" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="30" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/UserInfomation/UserInfomationController.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/UserInfomation/DataBaseMgr.js">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/util/db.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -269,6 +274,12 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server/UserInfomation/DataBaseMgr.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/UserInfomation/UserInfomationController.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/server/login/DataBaseMgr.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
@@ -278,8 +289,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/login/LoginController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="88" column="22" lean-forward="true" selection-start-line="88" selection-start-column="22" selection-end-line="88" selection-end-column="22" />
+        <state relative-caret-position="257">
+          <caret line="173" column="14" selection-start-line="173" selection-start-column="14" selection-end-line="173" selection-end-column="14" />
         </state>
       </provider>
     </entry>

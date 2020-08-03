@@ -32,35 +32,22 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-
-    },
-
-    start () {
-        this.initData();
+        this.setRootNode(this.node);
         this.initUI();
+        this.initData();
     },
+    initUI(){
 
-    // update (dt) {},
-
+    },
     initData(){
 
     },
+    start () {
 
-    initUI(){
-        this.setRootNode(this.node);
-        this.addBtnClick(this.findNode("ContentLayout/UserInfo"));
-        this.addBtnClick(this.findNode("ContentLayout/SettingItem"));
     },
-
-    btnCallback: function(event) {
-        cc.log("btnCallback:", event.node.name);
-        switch (event.node.name) {
-            case  'UserInfo':
-                PopBoxMgr.showUserInfoBox();
-                break;
-            case  'SettingItem':
-                PopBoxMgr.showSettingBox();
-                break;
-        }
-    },
+    setText(text){
+        let textNode = this.findNode("Text");
+        GUtils.setLabelText(textNode,text);
+    }
+    // update (dt) {},
 });

@@ -36,6 +36,8 @@ app.post('/getVerifitionCode', g_login.getVerifitionCode);
 app.post('/userRegister', g_login.userRegister);
 app.post('/userLogin', g_login.userLogin);
 app.post('/getUserInfo', g_login.getUserInfo);
+app.post('/userLogout', g_login.userLogout);
+
 //login end
 
 //dashboard begin

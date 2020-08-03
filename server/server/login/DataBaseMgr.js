@@ -63,16 +63,16 @@ exports.add_user_info = function(objectArr, success, failure) {
 //查询用户信息数据
 exports.find_user_info_data = function(object, success, failure) {
     var sql = 'SELECT child.UI_Phone,child.UI_NickName,child.UI_Gold,child.UI_ID,User_Account.UA_Password,User_Account.UA_Name,'
-    sql += ' parent.UI_NickName AS Parent_NickName,paccount.UA_Name AS Parent_UserName '
+    sql += ' parent.UI_ID AS Parent_ID,parent.UI_NickName AS Parent_NickName,paccount.UA_Name AS Parent_UserName '
     sql += ' FROM User_Account,User_Info child'
     sql += ' Left JOIN User_Info parent ON parent.UI_ID = child.UI_ParentID ';
     sql += ' Left JOIN User_Account paccount ON parent.UA_ID = paccount.UA_ID ';
     sql += ' WHERE child.UA_ID = User_Account.UA_ID ';
-    if(object["UI_Token"]){
+    if (object["UI_Token"]) {
         sql += ' and child.UI_Token = ' + object["UI_Token"];
     }
 
-    if(object["UI_Phone"]){
+    if (object["UI_Phone"]) {
         sql += ' and child.UI_Phone = ' + object["UI_Phone"];
     }
     m_db.query(sql, success, failure);
@@ -82,11 +82,17 @@ exports.find_user_info_data = function(object, success, failure) {
 exports.find_login_user_data = function(object, success, failure) {
     var sql = 'SELECT User_Info.UI_ID,User_Account.UA_Password,User_Account.UA_Name '
     sql += ' FROM User_Info,User_Account '
-    sql += ' WHERE UA_Name=' + object["UA_Name"] +'and User_Info.UA_ID = User_Account.UA_ID';
+    sql += ' WHERE User_Info.UA_ID = User_Account.UA_ID';
+    if (object["UA_Name"]) {
+        sql += ' and User_Account.UA_Name=' + object["UA_Name"];
+    }
+    if (object["UI_Phone"]) {
+        sql += ' and User_Info.UI_Phone=' + object["UI_Phone"];
+    }
     m_db.query(sql, success, failure);
 }
 
-exports.update_user_token = function(objectArr, success, failure){
+exports.update_user_token = function(objectArr, success, failure) {
     var sqls = [];
     for (var i = 0; i < objectArr.length; i++) {
         var object = objectArr[i];

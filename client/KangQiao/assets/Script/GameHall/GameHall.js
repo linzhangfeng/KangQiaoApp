@@ -48,6 +48,8 @@ cc.Class({
 
         this.addBtnClick(this.findNode("EnterGameBtn"));
     },
+
+
     btnCallback: function (event) {
         cc.log("btnCallback:", event.node.name);
         switch (event.node.name) {
@@ -57,7 +59,7 @@ cc.Class({
         }
     },
     initData: function () {
-
+        this.getUserInfo();
     },
 
     start() {
@@ -69,6 +71,27 @@ cc.Class({
 
     update(dt) {
 
+    },
+
+    getUserInfo(){
+        let playerData = GModel.getPlayerData();
+        GHttp.sendHttp("getUserInfo",{
+            token:playerData.token,
+        },function (data) {
+            if(data.code == 20000){
+                let recv_data = data.data;
+                let userData = recv_data["userdata"];
+                playerData.nickName = userData["UI_NickName"];
+                playerData.userName = userData["UA_Name"];
+                playerData.userId = userData["UI_ID"];
+                playerData.money = userData["UI_Gold"];
+                playerData.phone = userData["UI_Phone"];
+                playerData.parentNickName = userData["Parent_NickName"];
+                playerData.parentUserName = userData["Parent_UserName"];
+                playerData.parentId = userData["Parent_ID"];
+                playerData = GModel.getPlayerData();
+            }
+        },5000);
     },
 
     toGameRoom:function () {

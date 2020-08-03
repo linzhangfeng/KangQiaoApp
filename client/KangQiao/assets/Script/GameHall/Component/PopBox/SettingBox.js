@@ -7,11 +7,12 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
+let BasePopBox = require("BaseBox");
 cc.Class({
-    extends: GBaseComponent,
+    extends: BasePopBox,
 
     properties: {
+        tag:"SettingBox",
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -32,35 +33,53 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-
+        console.log("lin=onLoad:"+ this.tag);
     },
 
     start () {
+        console.log("lin=start:"+ this.tag);
         this.initData();
         this.initUI();
     },
 
-    // update (dt) {},
-
     initData(){
+        // this._super();
 
     },
-
     initUI(){
+        let self = this;
         this.setRootNode(this.node);
-        this.addBtnClick(this.findNode("ContentLayout/UserInfo"));
-        this.addBtnClick(this.findNode("ContentLayout/SettingItem"));
+        let headNode = this.findNode("PopHead");
+        this._super(headNode);
+
+        // this.addListenerFinish(function () {
+        //
+        // }.bind(this));
+
+        let userInfoItem = this.findNode("ContentLayout/UserInfoItem_1");
+        GUtils.addBtnClick(userInfoItem,function () {
+           PopBoxMgr.showChangeNameBox();
+        })
+
+        let logoutBtn = this.findNode("ContentLayout/LogoutBtn");
+        GUtils.addBtnClick(logoutBtn,function () {
+            self.logout();
+        })
     },
 
-    btnCallback: function(event) {
-        cc.log("btnCallback:", event.node.name);
-        switch (event.node.name) {
-            case  'UserInfo':
-                PopBoxMgr.showUserInfoBox();
-                break;
-            case  'SettingItem':
-                PopBoxMgr.showSettingBox();
-                break;
-        }
+    logout(){
+        let playerData = GModel.getPlayerData();
+        GHttp.sendHttp("userLogout",{
+            userId:playerData.userId
+        },function (data) {
+            if(data.code == 20000){
+                //重置数据
+                GModel.reset();
+
+                //回到登录界面
+                GPlatform.toLogin();
+            }
+        },5000);
     },
+    // update (dt) {},
 });

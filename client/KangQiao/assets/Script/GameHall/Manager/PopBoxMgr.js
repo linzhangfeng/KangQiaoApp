@@ -47,6 +47,16 @@ window.PopBoxMgr = {
         GUtils.setNodeVis(changNameLayout,PopBoxMgr.UserCenter.ChangeName == type);
     },
 
+    showSettingBox(){
+        let box = cc.find("Setting",this.rootNode);
+        let jsBox = box.getComponent("SettingBox");
+        jsBox.show();
+    },
+
+    hideSettingBox(){
+
+    },
+
     reset(){
 
     }

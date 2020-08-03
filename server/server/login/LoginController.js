@@ -10,21 +10,21 @@ const { userInfo } = require('os');
 
 
 //获取用户信息
-exports.getUserInfo = function(req, res){
+exports.getUserInfo = function(req, res) {
     if (req.url == '/getUserInfo') {
         var tagName = "getUserInfo";
         m_httpUtils.post_receive(req, function(recvData, tag) {
             var sql_obj = {};
             var res_data = {};
             var packageData = null;
-            sql_obj["UI_Token"] =  Utils.toSqlString(recvData['token']);
+            sql_obj["UI_Token"] = Utils.toSqlString(recvData['token']);
             //获取用户信息
-            m_db.find_user_info_data(sql_obj,function(userInfoData){
-                if(userInfoData.length > 0){
-                    res_data["userdata"]= userInfoData[0];
+            m_db.find_user_info_data(sql_obj, function(userInfoData) {
+                if (userInfoData.length > 0) {
+                    res_data["userdata"] = userInfoData[0];
                     packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
                     m_httpUtils.post_response(res, packageData, tag);
-                }else{
+                } else {
                     //用户不存在
                     packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.UserInfoNotFound, res_data);
                     m_httpUtils.post_response(res, packageData, tag);
@@ -43,33 +43,56 @@ exports.userLogin = function(req, res) {
             var sql_obj = {};
             var res_data = {};
             var packageData = null;
-            sql_obj["UA_Name"] =  Utils.toSqlString(recvData['username']);
+            if (recvData['username'] && recvData['username'] != "") sql_obj["UA_Name"] = Utils.toSqlString(recvData['username']);
+            if (recvData['phone'] && recvData['phone'] != "") sql_obj["UI_Phone"] = Utils.toSqlString(recvData['phone']);
             //获取用户信息
-            m_db.find_login_user_data(sql_obj,function(loginData){
-                if(loginData.length > 0){
+            m_db.find_login_user_data(sql_obj, function(loginData) {
+                if (loginData.length > 0) {
                     //验证密码
-                     if(loginData[0]["UA_Password"] == recvData['password']){
+                    if (loginData[0]["UA_Password"] == recvData['password']) {
                         //生成一个新的token
                         var token = Utils.createTokens();
                         var token_sql = {};
                         token_sql["UI_Token"] = Utils.toSqlString(token);
                         token_sql["UI_ID"] = loginData[0]["UI_ID"];
-                        m_db.update_user_token([token_sql],function(){
+                        m_db.update_user_token([token_sql], function() {
                             //返回给用户
                             res_data["token"] = token;
                             packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
                             m_httpUtils.post_response(res, packageData, tag);
                         })
-                     }else{
+                    } else {
                         //密码错误
                         packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.PasswordError, res_data);
                         m_httpUtils.post_response(res, packageData, tag);
-                     }
-                }else{
+                    }
+                } else {
                     //用户不存在
                     packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.UserInfoNotFound, res_data);
                     m_httpUtils.post_response(res, packageData, tag);
                 }
+            });
+
+        }, tagName);
+    }
+}
+
+exports.userLogout = function(req, res) {
+    if (req.url == '/userLogout') {
+        var tagName = "userLogout";
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+
+            //
+            if (recvData['userId'] && recvData['userId'] != 0) sql_obj["UI_ID"] = Utils.toSqlString(recvData['userId']);
+            sql_obj["UI_Token"] = Utils.toSqlString('');
+            //获取用户信息
+            m_db.update_user_token([sql_obj], function(logoutData) {
+                //用户退出成功
+                packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
             });
 
         }, tagName);
@@ -87,7 +110,7 @@ exports.userRegister = function(req, res) {
             //1 检测验证码是否过期
             sql_obj['UV_Phone'] = Utils.toSqlString(recvData['phone']);
             m_db.find_verification_code(sql_obj, function(codeData) {
-                if (codeData.length > 0 && Utils.isValidVerificationCode(codeData[0]["UpdateTime"])) {
+                if (codeData.length > 0 && !Utils.isValidVerificationCode(codeData[0]["UpdateTime"])) {
                     //2 检测手机号码是否已经注册
                     sql_obj["UI_Phone"] = Utils.toSqlString(recvData['phone']);
                     sql_obj["UA_Name"] = Utils.toSqlString(recvData['username']);

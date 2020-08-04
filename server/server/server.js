@@ -1,10 +1,10 @@
 var express = require('express');
 var g_dictionaryCtl = require('./controller/DictionaryController');
 var g_upLoadCtl = require('./controller/UpLoadController');
-var g_userInfomation = require('./UserInfomation/UserInfomationController');
 var g_logManager = require('./LogManager/LogManagerController');
-var g_dashboradManager = require('./dashboard/DashBoardController');
 var g_login = require('./login/LoginController');
+var g_spread = require('./spread/SpreadController');
+var g_home = require('./home/HomeController');
 var app = express();
 
 var m_config = null;
@@ -40,22 +40,13 @@ app.post('/userLogout', g_login.userLogout);
 
 //login end
 
-//dashboard begin
-app.post('/getOrderCostSumByDate', g_dashboradManager.getOrderCostSumByDate);
-app.post('/getUserSumByDate', g_dashboradManager.getUserSumByDate);
-//dashboard end
+//spread begin
+app.post('/getTeamData', g_spread.getTeamData);
+//spread end
 
-
-//userinformation begin
-app.post('/getOrderDetailList', g_userInfomation.getOrderDetailList);
-app.post('/addOrderDetail', g_userInfomation.addOrderDetail);
-app.post('/updateOrderDetail', g_userInfomation.updateOrderDetail);
-app.post('/deleteOrderDetail', g_userInfomation.deleteOrderDetail);
-app.post('/getUserList', g_userInfomation.getUserList);
-app.post('/updateUserInfo', g_userInfomation.updateUserInfo);
-app.post('/addUser', g_userInfomation.addUser);
-app.post('/getChildUserList', g_userInfomation.getChildUserList);
-//userinformation end
+//home begin
+app.post('/addParentUser', g_home.addParentUser);
+//home end
 
 //logmanager begin
 app.post('/getLogOperatorList', g_logManager.getLogOperatorList);

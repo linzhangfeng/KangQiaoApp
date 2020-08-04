@@ -47,6 +47,8 @@ cc.Class({
         PublicMgr.init(publicLayer);
 
         this.addBtnClick(this.findNode("EnterGameBtn"));
+
+        TableMgr.showPage(PageType.HomePage);
     },
 
 
@@ -59,7 +61,9 @@ cc.Class({
         }
     },
     initData: function () {
-        this.getUserInfo();
+        this.getUserInfo(function () {
+            TableMgr.getPageJs(PageType.HomePage).updateScene();
+        });
     },
 
     start() {
@@ -73,7 +77,7 @@ cc.Class({
 
     },
 
-    getUserInfo(){
+    getUserInfo(success){
         let playerData = GModel.getPlayerData();
         GHttp.sendHttp("getUserInfo",{
             token:playerData.token,
@@ -90,6 +94,7 @@ cc.Class({
                 playerData.parentUserName = userData["Parent_UserName"];
                 playerData.parentId = userData["Parent_ID"];
                 playerData = GModel.getPlayerData();
+                if(success)success();
             }
         },5000);
     },

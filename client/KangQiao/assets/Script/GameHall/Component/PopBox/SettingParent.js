@@ -7,9 +7,9 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
+let BasePopBox = require("BaseBox");
 cc.Class({
-    extends: GBaseComponent,
+    extends: BasePopBox,
 
     properties: {
         // foo: {
@@ -32,7 +32,9 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.setRootNode(this.node);
+        this.initData();
+        this.initUI();
+        // this._super();
     },
 
     start () {
@@ -40,34 +42,44 @@ cc.Class({
     },
 
     initData(){
-
+        // this._super();
     },
 
     initUI(){
-        let playerData = GModel.getPlayerData();
-        let parentId = playerData.parentId;
-        let parentInfo = this.findNode("ParentNode/ParentInfo");
-        let addParentBtn = this.findNode("ParentNode/AddParentBtn");
-        GUtils.addBtnClick(addParentBtn,function () {
-            PopBoxMgr.showSettingParent();
-        })
-        if(parentId){
-            GUtils.setNodeVis(parentInfo,true);
-            GUtils.setNodeVis(addParentBtn,false);
-            let itemLabel1 = cc.find("Item1/text",parentInfo);
-            GUtils.setLabelText(itemLabel1,playerData.parentId)
-            let itemLabel2 = cc.find("Item2/text",parentInfo);
-            GUtils.setLabelText(itemLabel2,playerData.parentUserName)
-            let itemLabel3 = cc.find("Item3/text",parentInfo);
-            GUtils.setLabelText(itemLabel3,playerData.parentNickName)
-        }else{
-            GUtils.setNodeVis(parentInfo,false);
-            GUtils.setNodeVis(addParentBtn,true);
-        }
+        let self = this;
+        this.setRootNode(this.node);
+        let headNode = this.findNode("PopHead");
+        this._super(headNode);
+        this.addListenerFinish(function () {
+            self.addParent();
+        }.bind(this));
+        this.setTitle("添加推介人");
     },
-    updateScene(){
-        //重新获取数据
-        this.initUI();
+
+    addParent(){
+        let playerData = GModel.getPlayerData();
+        let EditParentID = cc.find("ContentLayout/EditParentID", this.node);
+        let parentIDStr = EditParentID.getComponent(cc.EditBox).string;
+
+        if(parentIDStr.length < 4){
+            CommonTipMgr.showTip("格式错误");
+            return;
+        }
+        GHttp.sendHttp("addParentUser",{
+            userId:playerData.userId,
+            parentUserId:parentIDStr,
+        },function (data) {
+            if(data.code == 20000){
+                let parentData = data.data.parent_user;
+                playerData.parentId = parentData["UI_ID"];
+                playerData.parentNickName = parentData["UI_NickName"];
+                playerData.parentUserName = parentData["UA_Name"];
+                TableMgr.getPageJs(PageType.HomePage).updateScene();
+                CommonTipMgr.showTip("添加成功");
+                PopBoxMgr.hideSettingParent();
+            }
+
+        },5000);
     },
     // update (dt) {},
 });

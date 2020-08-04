@@ -3,17 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="c1f9471e-3145-4004-9ef7-ae1585364e05" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/GameHall_v.fire" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/GameHall_v.fire" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/LoginScene.fire" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Scene/GameHall/LoginScene.fire" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/UserCenterPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/UserCenterPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/HomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/HomePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/SpreadPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Component/TablePage/SpreadPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameHall.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameHall.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameLogin.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/GameLogin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Manager/PopBoxMgr.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Manager/PopBoxMgr.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GHttp.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GHttp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/public/GUtils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Manager/TableMgr.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/KangQiao/assets/Script/GameHall/Manager/TableMgr.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/login/DataBaseMgr.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/login/DataBaseMgr.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/login/LoginController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/login/LoginController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/UserInfomation/DataBaseMgr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/UserInfomation/UserInfomationController.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/dashboard/DashBoardController.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/dashboard/DataBaseMgr.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/CommonConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/CommonConfig.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -42,7 +44,7 @@
         <entry file="file://$PROJECT_DIR$/server/server.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="246">
-              <caret line="22" column="46" lean-forward="true" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
+              <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -50,20 +52,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/login/LoginController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="257">
-              <caret line="173" column="14" selection-start-line="173" selection-start-column="14" selection-end-line="173" selection-end-column="14" />
+            <state relative-caret-position="372">
+              <caret line="178" column="5" selection-start-line="178" selection-start-column="5" selection-end-line="178" selection-end-column="5" />
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/UserInfomation/DataBaseMgr.js">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/UserInfomation/UserInfomationController.js">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -102,7 +94,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="y" value="42" />
     <option name="width" value="1080" />
     <option name="height" value="998" />
@@ -131,12 +123,6 @@
               <item name="server" type="462c0819:PsiDirectoryNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
               <item name="login" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="xiaoqiao_server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="UserInfomation" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="xiaoqiao_server" type="b2602c69:ProjectViewProjectNode" />
@@ -183,12 +169,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1596164531430</updated>
-      <workItem from="1596164533160" duration="13728000" />
+      <workItem from="1596164533160" duration="14327000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13728000" />
+    <option name="totallyTimeSpent" value="14327000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -200,7 +186,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="42" width="1080" height="998" extended-state="0" />
+    <frame x="0" y="42" width="1080" height="998" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="npm" side_tool="true" />
@@ -270,7 +256,7 @@
     <entry file="file://$PROJECT_DIR$/server/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="246">
-          <caret line="22" column="46" lean-forward="true" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
+          <caret line="22" column="46" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
         </state>
       </provider>
     </entry>
@@ -289,8 +275,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/login/LoginController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="173" column="14" selection-start-line="173" selection-start-column="14" selection-end-line="173" selection-end-column="14" />
+        <state relative-caret-position="372">
+          <caret line="178" column="5" selection-start-line="178" selection-start-column="5" selection-end-line="178" selection-end-column="5" />
         </state>
       </provider>
     </entry>

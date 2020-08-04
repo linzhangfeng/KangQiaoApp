@@ -17,6 +17,29 @@ window.TableMgr = {
         GUtils.setNodeVis(CommissionPage,PageType.Commission == type);
     },
 
+    getPageJs(type){
+        let homePage = cc.find('HomePageLayer',this.rootNode);
+        let OrderPage = cc.find('OrderPageLayer',this.rootNode);
+        let UserPage = cc.find('UserPageLayer',this.rootNode);
+        let SpreadPage = cc.find('SpreadPageLayer',this.rootNode);
+        let CommissionPage = cc.find('CommissionPageLayer',this.rootNode);
+        if(PageType.HomePage == type){
+            return homePage.getComponent("HomePage");
+        }
+        if(PageType.TradePage == type){
+            return OrderPage.getComponent("TradePage");
+        }
+        if(PageType.UserCenterPage == type){
+            return UserPage.getComponent("UserCenterPage");
+        }
+        if(PageType.SpreadPage == type){
+            return SpreadPage.getComponent("SpreadPage");
+        }
+        if(PageType.Commission == type){
+            return CommissionPage.getComponent("Commission");
+        }
+        return null;
+    },
     reset(){
 
     }

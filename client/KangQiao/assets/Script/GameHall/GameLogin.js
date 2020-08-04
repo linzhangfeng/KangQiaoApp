@@ -143,6 +143,19 @@ cc.Class({
         // },function (data) {
         //     console.log("lin=getVerifitionCode:",JSON.stringify(data));
         // },5000);
+
+        // GHttp.sendHttp("getTeamData",{
+        //     userId:871154,
+        // },function (data) {
+        //     console.log("lin=getTeamData:",JSON.stringify(data));
+        // },5000);
+
+        // GHttp.sendHttp("addParentUser",{
+        //     userId:871153,
+        //     parentUserId:871150,
+        // },function (data) {
+        //     console.log("lin=addParentUser:",JSON.stringify(data));
+        // },5000);
     },
 
 

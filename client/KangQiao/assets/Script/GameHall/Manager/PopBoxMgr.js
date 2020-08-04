@@ -57,6 +57,18 @@ window.PopBoxMgr = {
 
     },
 
+    showSettingParent(){
+        let box = cc.find("SettingParent",this.rootNode);
+        let jsBox = box.getComponent("SettingParent");
+        jsBox.show();
+    },
+
+    hideSettingParent(){
+        let box = cc.find("SettingParent",this.rootNode);
+        let jsBox = box.getComponent("SettingParent");
+        jsBox.hide();
+    },
+
     reset(){
 
     }

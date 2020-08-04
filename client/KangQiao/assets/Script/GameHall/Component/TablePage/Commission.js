@@ -9,7 +9,7 @@
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 cc.Class({
-    extends: GBaseComponent,
+    extends: cc.Component,
 
     properties: {
         // foo: {
@@ -31,43 +31,11 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
-        this.setRootNode(this.node);
-    },
+    // onLoad () {},
 
     start () {
 
     },
 
-    initData(){
-
-    },
-
-    initUI(){
-        let playerData = GModel.getPlayerData();
-        let parentId = playerData.parentId;
-        let parentInfo = this.findNode("ParentNode/ParentInfo");
-        let addParentBtn = this.findNode("ParentNode/AddParentBtn");
-        GUtils.addBtnClick(addParentBtn,function () {
-            PopBoxMgr.showSettingParent();
-        })
-        if(parentId){
-            GUtils.setNodeVis(parentInfo,true);
-            GUtils.setNodeVis(addParentBtn,false);
-            let itemLabel1 = cc.find("Item1/text",parentInfo);
-            GUtils.setLabelText(itemLabel1,playerData.parentId)
-            let itemLabel2 = cc.find("Item2/text",parentInfo);
-            GUtils.setLabelText(itemLabel2,playerData.parentUserName)
-            let itemLabel3 = cc.find("Item3/text",parentInfo);
-            GUtils.setLabelText(itemLabel3,playerData.parentNickName)
-        }else{
-            GUtils.setNodeVis(parentInfo,false);
-            GUtils.setNodeVis(addParentBtn,true);
-        }
-    },
-    updateScene(){
-        //重新获取数据
-        this.initUI();
-    },
     // update (dt) {},
 });

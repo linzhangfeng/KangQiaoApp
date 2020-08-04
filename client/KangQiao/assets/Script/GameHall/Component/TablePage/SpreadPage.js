@@ -12,13 +12,10 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
+        userItem_Prefab: {
+            default: null,        // The default value will be used only when the component attaching
+            type: cc.Prefab, // optional, default is typeof default
+        },
         // bar: {
         //     get () {
         //         return this._bar;
@@ -27,15 +24,74 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
+        listData:[],
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
+    onLoad () {
+        this.initData();
+        this.initUI();
+    },
 
     start () {
 
     },
+    initUI(){
+        this.removeListView();
+    },
+    removeListView(){
+        let spreadListView = cc.find("OrderListView",this.node);
+        let content = cc.find("view/content",spreadListView);
+        content.removeAllChildren(true);
+    },
+    initData(){
 
+    },
+
+    updateUserItem(){
+        this.removeListView();
+        let self = this;
+        for(let i = 0; i < this.listData.length;i++){
+            let obj = this.listData[i];
+            this.createUserItem(obj);
+        }
+    },
+    pushUserItem(userItem){
+        if(!userItem)return;
+        let spreadListView = cc.find("OrderListView",this.node);
+        let content = cc.find("view/content",spreadListView);
+        userItem.parent = content;
+    },
+
+    createUserItem(data){
+        var self = this;
+        cc.loader.loadRes("GameHall/hall/prefab/ChildUserItem", cc.Prefab, function (error, prefab) {
+            let nodepr = cc.instantiate(prefab);
+            self.pushUserItem(nodepr);
+            
+        })
+    },
+    updateScene(){
+        let self = this;
+        this.getSpreadData(function () {
+            self.updateUserItem();
+        });
+    },
+    getSpreadData(success){
+        let self = this;
+        let playerData = GModel.getPlayerData();
+        GHttp.sendHttp("getTeamData",{
+            userId:playerData.userId,
+        },function (data) {
+            console.log("lin=getSpreadData:",JSON.stringify(data));
+            if(data.code == 20000){
+                self.listData = data.data.list;
+                if(success)success();
+            }else{
+                CommonTipMgr.showTip(data.message);
+            }
+        },5000);
+    },
     // update (dt) {},
 });

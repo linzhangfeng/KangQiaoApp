@@ -16,6 +16,8 @@ var ErrorCode = {
     UserNameHasExist: 307,
     VerificationOverDue: 308,
     PhoneHasExist: 309,
+    ParentUserNotExist: 310,
+    ParentHasAdd: 311,
 }
 
 var ErrorCodeMsg = {
@@ -30,6 +32,8 @@ var ErrorCodeMsg = {
     '307': '用户名已被注册',
     "308": '验证码无效',
     "309": '手机号码已被注册',
+    "310": '上级用户不存在',
+    "311": '已添加过上级用户',
 }
 exports.ErrorCodeMsg = ErrorCodeMsg;
 exports.ErrorCode = ErrorCode;

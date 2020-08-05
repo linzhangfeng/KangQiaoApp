@@ -305,5 +305,18 @@ window.GUtils = {
             newobj[attr] = obj[attr];
         }
         return newobj;
+    },
+    timeFormatter: function (value) {
+        var da = new Date(parseInt(value.replace("/Date(", "").replace(")/", "").split("+")[0]));
+        return da.getFullYear() + "-" + GUtils.polish(da.getMonth() + 1,2) + "-" + GUtils.polish(da.getDate(),2) + " " + GUtils.polish(da.getHours(),2) + ":" + GUtils.polish(da.getMinutes(),2) + ":" + GUtils.polish(da.getSeconds(),2);
+    },
+
+    polish: function (num, n) {
+        var len = num.toString().length;//num的值转换成字符串并且将它的长度赋值
+        while (len < n) {//n是总位数
+            num = "0" + num;
+            len++;
+        }
+        return num;
     }
 };

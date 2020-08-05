@@ -24,74 +24,101 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-        listData:[],
+        listData: [],
+        oneCount:0,
+        twoCount:0,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
+    onLoad() {
         this.initData();
         this.initUI();
     },
 
-    start () {
+    start() {
 
     },
-    initUI(){
+    initUI() {
         this.removeListView();
     },
-    removeListView(){
-        let spreadListView = cc.find("OrderListView",this.node);
-        let content = cc.find("view/content",spreadListView);
+    removeListView() {
+        let spreadListView = cc.find("OrderListView", this.node);
+        let content = cc.find("view/content", spreadListView);
         content.removeAllChildren(true);
     },
-    initData(){
+    initData() {
 
     },
 
-    updateUserItem(){
+    updateUserItem() {
         this.removeListView();
-        let self = this;
-        for(let i = 0; i < this.listData.length;i++){
+        for (let i = 0; i < this.listData.length; i++) {
             let obj = this.listData[i];
             this.createUserItem(obj);
         }
     },
-    pushUserItem(userItem){
-        if(!userItem)return;
-        let spreadListView = cc.find("OrderListView",this.node);
-        let content = cc.find("view/content",spreadListView);
+    updateTopUI(){
+        let teamSumNode = cc.find("SpreadInfoLayout/SpriteTitleNode_sum",this.node);
+        let sumLabel = cc.find("TitleValueText",teamSumNode);
+        GUtils.setLabelText(sumLabel,(this.oneCount + this.twoCount) + "人");
+
+        let teamOneNode = cc.find("SpreadInfoLayout/SpriteTitleNode_one",this.node);
+        let oneLabel = cc.find("TitleValueText",teamOneNode);
+        GUtils.setLabelText(oneLabel,(this.oneCount) + "人");
+
+        let teamTwoNode = cc.find("SpreadInfoLayout/SpriteTitleNode_two",this.node);
+        let twoLabel = cc.find("TitleValueText",teamTwoNode);
+        GUtils.setLabelText(twoLabel,(this.twoCount) + "人");
+
+    },
+    pushUserItem(userItem) {
+        if (!userItem) return;
+        let spreadListView = cc.find("OrderListView", this.node);
+        let content = cc.find("view/content", spreadListView);
         userItem.parent = content;
     },
 
-    createUserItem(data){
+    createUserItem(data) {
         var self = this;
         cc.loader.loadRes("GameHall/hall/prefab/ChildUserItem", cc.Prefab, function (error, prefab) {
             let nodepr = cc.instantiate(prefab);
             self.pushUserItem(nodepr);
-            
+            let jsNode = nodepr.getComponent("ChildUserItem");
+            let itemData = [
+                ['用户ID', data.UI_ID],
+                ['用户名', data.UserName],
+                ['下级人数', data.childCount],
+                ['团队贡献', data.team_money == null ? 0 : data.team_money],
+                ['用户贡献', data.sum_money == null ? 0 : data.sum_money],
+            ];
+            jsNode.setData(itemData);
         })
     },
-    updateScene(){
+    updateScene() {
         let self = this;
         this.getSpreadData(function () {
             self.updateUserItem();
+            self.updateTopUI();
         });
     },
-    getSpreadData(success){
+    getSpreadData(success) {
         let self = this;
         let playerData = GModel.getPlayerData();
-        GHttp.sendHttp("getTeamData",{
-            userId:playerData.userId,
-        },function (data) {
-            console.log("lin=getSpreadData:",JSON.stringify(data));
-            if(data.code == 20000){
+        GHttp.sendHttp("getTeamData", {
+            userId: playerData.userId,
+        }, function (data) {
+            console.log("lin=getSpreadData:", JSON.stringify(data));
+            if (data.code == 20000) {
+                let recv_data = data.data;
                 self.listData = data.data.list;
-                if(success)success();
-            }else{
+                self.oneCount = recv_data.oneCount;
+                self.twoCount = recv_data.twoCount;
+                if (success) success();
+            } else {
                 CommonTipMgr.showTip(data.message);
             }
-        },5000);
+        }, 5000);
     },
     // update (dt) {},
 });

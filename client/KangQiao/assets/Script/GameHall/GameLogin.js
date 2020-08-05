@@ -79,7 +79,8 @@ cc.Class({
                 // this.toGameHall();
                 break;
             case 'ForgetPasswordBtn':
-                this.toGameHall();
+                this.testHttp();
+                // this.toGameHall();
                 break;
             case 'RegisterBtn':
                 this.showRegister();
@@ -156,6 +157,19 @@ cc.Class({
         // },function (data) {
         //     console.log("lin=addParentUser:",JSON.stringify(data));
         // },5000);
+
+        // GHttp.sendHttp("getOrderList",{
+        //     userId:871153,
+        //     parentUserId:871150,
+        // },function (data) {
+        //     console.log("lin=getOrderList:",JSON.stringify(data));
+        // },5000);
+
+        GHttp.sendHttp("getCommissionList",{
+            userId:871160,
+        },function (data) {
+            console.log("lin=getCommissionList:",JSON.stringify(data));
+        },5000);
     },
 
 

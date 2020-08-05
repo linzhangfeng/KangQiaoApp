@@ -15,6 +15,8 @@ window.TableMgr = {
         GUtils.setNodeVis(UserPage,PageType.UserCenterPage == type);
         GUtils.setNodeVis(SpreadPage,PageType.SpreadPage == type);
         GUtils.setNodeVis(CommissionPage,PageType.Commission == type);
+
+        if(TableMgr.getPageJs(type).updateScene)TableMgr.getPageJs(type).updateScene();
     },
 
     getPageJs(type){

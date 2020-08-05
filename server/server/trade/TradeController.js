@@ -8,26 +8,25 @@ var fd = require("formidable"); //载入 formidable
 var compressing = require('compressing');
 const { userInfo } = require('os');
 
-//获取团队用户数据
-exports.getTeamData = function(req, res) {
-    if (req.url == '/getTeamData') {
-        var tagName = "getTeamData";
+//获取订单列表
+exports.getOrderList = function(req, res) {
+    if (req.url == '/getOrderList') {
+        var tagName = "getOrderList";
         m_httpUtils.post_receive(req, function(recvData, tag) {
             var sql_obj = {};
             var res_data = {};
             var packageData = null;
 
-            if (recvData['userId'] && recvData['userId'] != 0) sql_obj["UI_ID"] = Utils.toSqlString(recvData['userId']);
             //获取团队信息
-            m_db.find_user_team_data(sql_obj, function(teamData) {
-                res_data = teamData;
-                m_db.find_two_user_count(sql_obj, function(twoUserCount) {
-                    res_data["twoCount"] = twoUserCount[0]["twoCount"];
+            if (recvData['userId'] && recvData['userId'] != 0) sql_obj["UI_ID"] = Utils.toSqlString(recvData['userId']);
+            m_db.find_order_list(sql_obj, function(orderList) {
+                res_data["list"] = orderList;
+                m_db.find_order_sum_cost(sql_obj, function(allSumCostData) {
+                    if (allSumCostData && allSumCostData.length > 0) res_data["all_totle_money"] = allSumCostData[0]["all_totle_money"];
                     packageData = m_resultData.create(ErrorCodeConfig.ErrorCode.Success, res_data);
                     m_httpUtils.post_response(res, packageData, tag);
                 });
             });
-
         }, tagName);
     }
 };

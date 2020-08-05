@@ -5,6 +5,8 @@ var g_logManager = require('./LogManager/LogManagerController');
 var g_login = require('./login/LoginController');
 var g_spread = require('./spread/SpreadController');
 var g_home = require('./home/HomeController');
+var g_trade = require('./trade/TradeController');
+var g_commission = require('./Commission/CommissionController');
 var app = express();
 
 var m_config = null;
@@ -47,6 +49,14 @@ app.post('/getTeamData', g_spread.getTeamData);
 //home begin
 app.post('/addParentUser', g_home.addParentUser);
 //home end
+
+//trade begin
+app.post('/getOrderList', g_trade.getOrderList);
+//trade end
+
+//commission begin
+app.post('/getCommissionList', g_commission.getCommissionList);
+//commission end
 
 //logmanager begin
 app.post('/getLogOperatorList', g_logManager.getLogOperatorList);

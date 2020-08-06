@@ -128,7 +128,30 @@ export const asyncRoutes = [{
             }
         ]
     },
-
+    {
+        path: '/order-commission',
+        component: Layout,
+        name: 'OrderCommission',
+        meta: {
+            title: 'orderCommission',
+            icon: 'dashboard'
+        },
+        children: [{
+                path: 'order-list',
+                component: () =>
+                    import ('@/views/order-commission/order-list'),
+                name: 'OrderList',
+                meta: { title: 'orderList', noCache: true }
+            },
+            {
+                path: 'commission-list',
+                component: () =>
+                    import ('@/views/order-commission/commission-list'),
+                name: 'CommissionList',
+                meta: { title: 'commissionList', affix: true }
+            }
+        ]
+    },
     {
         path: '/log-management',
         component: Layout,

@@ -3,9 +3,11 @@ export default {
         dashboard: '首页',
         userInformation: '用户信息',
         userList: '用户列表',
-        orderList: '订单列表',
         lowerLevelUser: '下级查询',
         testHtml: '测试页面',
+        orderCommission: '订单佣金',
+        orderList: '订单列表',
+        commissionList: '佣金列表',
         logManagement: '日志管理',
         logLogin: '登录日志',
         logError: '错误日志',
@@ -18,6 +20,11 @@ export default {
     common: {
         createTime: '创建时间',
         updateTime: '更新时间'
+    },
+    orderCommission: {
+        productName: '商品名称',
+        productNumber: '数量',
+        productPrice: '价格/个',
     },
     userInformation: {
         // userlist

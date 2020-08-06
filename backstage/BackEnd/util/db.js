@@ -1,6 +1,6 @@
 var m_pool = null;
 var m_mysql = require("mysql");
-
+var Utils = require("./Utils");
 exports.init = function(config) {
     m_pool = m_mysql.createPool({
         host: config.HOST,
@@ -23,7 +23,8 @@ function generateId() {
     return Id;
 }
 
-exports.execute = function(sql, success, failure) {
+exports.execute = function(sqls, success, failure) {
+    sql = Utils.formatSql(sqls);
     console.log("lin=execute=sql:" + sql);
     m_pool.getConnection(function(err, conn) {
         if (err) {
@@ -32,7 +33,7 @@ exports.execute = function(sql, success, failure) {
                 throw err;
             }
         } else {
-            conn.query(sql[0], function(qerr, vals, fields) {
+            conn.query(sql, function(qerr, vals, fields) {
                 //释放连接  
                 conn.release();
                 //事件驱动回调  

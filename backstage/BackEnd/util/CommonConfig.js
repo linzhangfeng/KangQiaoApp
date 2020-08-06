@@ -14,6 +14,10 @@ var ErrorCode = {
     UpdateDetailsError: 305,
     FindSumCostError: 306,
     UserNameHasExist: 307,
+    AddProductError: 308,
+    UpdateProductError: 309,
+    DeleteProductError: 310,
+    ProductNotFound: 311,
 }
 
 var ErrorCodeMsg = {
@@ -26,6 +30,10 @@ var ErrorCodeMsg = {
     '305': '更新订单失败',
     '306': '查询总消费金额失败',
     '307': '用户名已被注册',
+    '308': '产品添加错误',
+    '309': '产品更新错误',
+    '310': '产品删除错误',
+    '310': '产品未配置',
 }
 exports.ErrorCodeMsg = ErrorCodeMsg;
 exports.ErrorCode = ErrorCode;

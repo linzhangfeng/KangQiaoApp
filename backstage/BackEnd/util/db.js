@@ -8,6 +8,7 @@ exports.init = function(config) {
         password: config.PSWD,
         database: config.DB,
         port: config.PORT,
+        multipleStatements: true
     });
 };
 
@@ -24,8 +25,9 @@ function generateId() {
 }
 
 exports.execute = function(sqls, success, failure) {
-    sql = Utils.formatSql(sqls);
+    var sql = Utils.formatSql(sqls);
     console.log("lin=execute=sql:" + sql);
+    if (sqls.length == 0) return;
     m_pool.getConnection(function(err, conn) {
         if (err) {
             if (err) {

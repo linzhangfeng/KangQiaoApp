@@ -16,26 +16,19 @@ exports.getOrderDetailList = function(req, res) {
             var sql_obj = {};
             var res_data = {};
             var packageData = null;
-            if (recvData['userName']) sql_obj['UI_NickName'] = Utils.toSqlString(recvData['userName']);
+            if (recvData['userName']) sql_obj['UA_Name'] = Utils.toSqlString(recvData['userName']);
             if (recvData['orderId']) sql_obj['UO_ID'] = recvData['orderId'];
 
-            sql_obj['pageSize'] = 20;
-            sql_obj['page'] = 1;
-            if (recvData['limit']) sql_obj['pageSize'] = recvData['limit'];
-            if (recvData['page']) sql_obj['page'] = recvData['page'];
-            sql_obj['startRow'] = (sql_obj['page'] - 1) * sql_obj['pageSize'];
-            m_db.find_order_details_count(sql_obj, function(countData) {
-                var totalCount = countData[0]['count(*)'];
-                m_db.find_order_details(sql_obj, function(data) {
-                    res_data['list'] = data;
-                    res_data['totalCount'] = totalCount;
-                    packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
-                    m_httpUtils.post_response(res, packageData, tag);
-                }, function() {
-                    packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
-                    m_httpUtils.post_response(res, packageData, tag);
-                });
-            })
+            Utils.packageLimitPage(sql_obj, recvData);
+            m_db.find_order_details(sql_obj, function(data) {
+                res_data = data;
+                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            }, function() {
+                packageData = m_resultData.create(CodeConfig.ErrorCode.FindOrderDetailsError, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            });
+
         }, tagName);
     }
 }
@@ -73,52 +66,56 @@ exports.addOrderDetail = function(req, res) {
             var sql_obj = {};
             var res_data = {};
             var packageData = null;
-            if (recvData['userName']) sql_obj['UI_NickName'] = Utils.toSqlString(recvData['userName']);
+            if (recvData['userName']) sql_obj['UA_Name'] = Utils.toSqlString(recvData['userName']);
 
             //查询该用户是否存在
             m_db.find_user_info(sql_obj, function(data) {
-                if (recvData['money']) sql_obj['UO_Money'] = recvData['money'];
-                if (recvData['productName']) sql_obj['PL_Name'] = recvData['productName'];
-                if (recvData['productNumber']) sql_obj['PL_Name'] = recvData['productNumber'];
+                if (recvData['productName']) sql_obj['PL_Name'] = Utils.toSqlString(recvData['productName']);
+                if (recvData['number']) sql_obj['UO_Number'] = recvData['number'];
                 sql_obj["CreateTime"] = 'NOW()';
                 sql_obj["UpdateTime"] = 'NOW()';
                 if (data.length != 0) {
                     //获取商品信息
                     var product_sql = {};
-                    if (recvData['productName']) product_sql['PL_Name'] = recvData['productName'];
+                    if (recvData['productName']) product_sql['PL_Name'] = Utils.toSqlString(recvData['productName']);
                     m_db.find_product(product_sql, function(product_data) {
                         if (product_data.length != 0) {
                             //添加订单数据
-                            m_db.add_order_details([sql_obj], function(order_data) {
-                                res_data = order_data;
+                            var add_order_sql = {};
+                            add_order_sql = Utils.copyObject(sql_obj);
+                            add_order_sql["UO_Price"] = product_data[0]["PL_Price"];
+                            add_order_sql["UO_Money"] = product_data[0]["PL_Price"] * parseInt(recvData['number']);
+                            m_db.add_order_details([add_order_sql], function(order_data) {
+                                res_data["orderId"] = order_data.insertId;
                                 packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
                                 m_httpUtils.post_response(res, packageData, tag);
 
                                 //获取用户的上两级
                                 var parent_user_sql = {};
+                                parent_user_sql = Utils.copyObject(sql_obj);
                                 m_db.find_parent_user(parent_user_sql, function(parent_userdata) {
                                     if (parent_userdata.length > 0) {
                                         var commissionArr = [];
-                                        var commissionMoney = recvData['productNumber'] * product_data[0]["PL_Price"];
+                                        var commissionMoney = parseInt(recvData['number']) * product_data[0]["PL_Price"];
                                         var public_parent_sql = {};
                                         public_parent_sql["UC_CostMoeny"] = commissionMoney;
                                         public_parent_sql["UO_ID"] = order_data.insertId;
 
 
-                                        if (parent_userdata.parentId) {
+                                        if (parent_userdata[0].parentId) {
                                             var parent_sql_1 = Utils.copyObject(public_parent_sql);
-                                            parent_sql_1["UI_ID"] = parent_userdata.parentId;
-                                            parent_sql_1["UL_Ratio"] = product_data.PL_Ratio_One;
+                                            parent_sql_1["UI_ID"] = parent_userdata[0].parentId;
+                                            parent_sql_1["UL_Ratio"] = product_data[0].PL_Ratio_One;
                                             parent_sql_1["UC_Type"] = 1;
-                                            parent_sql_1["UC_Commission"] = commissionMoney * product_data.PL_Ratio_One / 100;
+                                            parent_sql_1["UC_Commission"] = commissionMoney * product_data[0].PL_Ratio_One / 100;
                                             commissionArr.push(parent_sql_1);
                                         }
-                                        if (parent_userdata.pparentId) {
+                                        if (parent_userdata[0].pparentId) {
                                             var parent_sql_2 = Utils.copyObject(public_parent_sql);
-                                            parent_sql_2["UI_ID"] = parent_userdata.pparentId;
-                                            parent_sql_2["UL_Ratio"] = product_data.PL_Ratio_Two;
+                                            parent_sql_2["UI_ID"] = parent_userdata[0].pparentId;
+                                            parent_sql_2["UL_Ratio"] = product_data[0].PL_Ratio_Two;
                                             parent_sql_2["UC_Type"] = 2;
-                                            parent_sql_2["UC_Commission"] = commissionMoney * product_data.PL_Ratio_Two / 100;
+                                            parent_sql_2["UC_Commission"] = commissionMoney * product_data[0].PL_Ratio_Two / 100;
                                             commissionArr.push(parent_sql_2);
                                         }
 

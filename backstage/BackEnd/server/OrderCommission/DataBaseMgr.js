@@ -2,29 +2,42 @@ var m_db = require('../../util/db');
 var Utils = require('../../util/Utils');
 //查询所有订单信息
 exports.find_order_details = function(object, success, failure) {
-    var sql = 'SELECT User_OrderDetails.UO_ID,User_OrderDetails.UO_Money,User_OrderDetails.CreateTime,User_OrderDetails.UpdateTime,User_Info.UI_NickName ';
-    sql += 'FROM User_OrderDetails,User_Info ';
-    sql += 'where User_Info.UI_ID = User_OrderDetails.UI_ID and User_OrderDetails.UO_State = 0 ';
-    if (object['UO_ID'] || object['UI_NickName'] || object['CreateTime']) {
+    var sql = 'SELECT SQL_CALC_FOUND_ROWS order_list.UO_ID,order_list.UO_Money,order_list.UO_Price,order_list.UO_Number,';
+    sql += ' order_list.CreateTime,order_list.UpdateTime,';
+    sql += ' account.UA_Name userName,';
+    sql += ' product.PL_Name productName';
+    sql += ' FROM User_OrderDetails order_list ';
+    sql += ' Left JOIN User_Info userInfo ON userInfo.UI_ID = order_list.UI_ID  ';
+    sql += ' Left JOIN User_Account account ON userInfo.UA_ID = account.UA_ID  ';
+    sql += ' Left JOIN Product_List product ON product.PL_ID = order_list.PL_ID  ';
+    sql += ' where order_list.UO_State = 0 ';
 
-        if (object['UI_NickName']) {
-            var temp_sql = ' and User_Info.UI_NickName = ' + object['UI_NickName'];
-            sql += temp_sql;
-        }
-
-        if (object['UO_ID']) {
-            var temp_sql = ' and User_OrderDetails.UO_ID = ' + object['UO_ID'];
-            sql += temp_sql;
-        }
-
-        if (object['CreateTime']) {
-            var temp_sql = ' and date_format([CreateTime],"%Y-%m-%d") = to_days(' + object['CreateTime'] + ') ';
-            sql += temp_sql;
-        }
+    if (object['UA_Name']) {
+        var temp_sql = ' and account.UA_Name = ' + object['UA_Name'];
+        sql += temp_sql;
     }
-    sql += ' ORDER BY User_OrderDetails.CreateTime DESC ';
+
+    if (object['UO_ID']) {
+        var temp_sql = ' and order_list.UO_ID = ' + object['UO_ID'];
+        sql += temp_sql;
+    }
+
+    if (object['CreateTime']) {
+        var temp_sql = ' and date_format([order_list.CreateTime],"%Y-%m-%d") = to_days(' + object['CreateTime'] + ') ';
+        sql += temp_sql;
+    }
+
+    sql += ' ORDER BY order_list.CreateTime DESC ';
     sql += ' LIMIT ' + object['startRow'] + ',' + object['pageSize'];
-    m_db.query(sql, success, failure);
+
+    m_db.query(sql, function(data) {
+        var resultData = {};
+        resultData['list'] = data;
+        m_db.queryCount(function(count) {
+            resultData['count'] = count;
+            if (success) success(resultData);
+        }, failure)
+    }, failure);
 }
 
 //查询订单条数
@@ -36,7 +49,7 @@ exports.find_order_details_count = function(object, success, failure) {
 }
 
 exports.find_user_info = function(objectArr, success, failure) {
-    var sql = 'SELECT * FROM User_Info where ';
+    var sql = 'SELECT * FROM User_Account where ';
     sql += m_db.packageWhereSql(objectArr);
     m_db.query(sql, success, failure);
 }
@@ -48,15 +61,20 @@ exports.add_order_details = function(objectArr, success, failure) {
         let object = objectArr[i];
         var sql = 'INSERT INTO User_OrderDetails';
 
-        if (object['UI_NickName']) {
-            var UI_ID = '(SELECT UI_ID FROM User_Info where UI_NickName=' + object['UI_NickName'] + ')';
+        if (object['UA_Name']) {
+            var UI_ID = '('
+            UI_ID += ' SELECT UI_ID FROM User_Info userInfo ';
+            UI_ID += ' Left JOIN User_Account account ON userInfo.UA_ID = account.UA_ID ';
+            UI_ID += ' where account.UA_Name= ' + object['UA_Name'];
+            UI_ID += ')';
             object['UI_ID'] = UI_ID;
-            object['UI_NickName'] = null;
+            object['UA_Name'] = null;
         }
+
         if (object['PL_Name']) {
             var UI_ID = '(SELECT PL_ID FROM Product_List where PL_Name=' + object['PL_Name'] + ')';
             object['PL_ID'] = UI_ID;
-            object['UI_NickName'] = null;
+            object['PL_Name'] = null;
         }
 
         sql += m_db.packageInSertSql(objectArr[i]);
@@ -87,13 +105,14 @@ exports.add_commission_order = function(objectArr, success, failure) {
         let object = objectArr[i];
         var sql1 = 'INSERT INTO User_Commission';
         sql1 += m_db.packageInSertSql(objectArr[i]);
+        sqls.push(sql1);
 
         var sql2 = 'UPDATE User_Info SET ';
         sql2 += ' UI_Gold = UI_Gold+' + object['UC_Commission'];
         sql2 += ' WHERE UI_ID=' + object["UI_ID"];
-
         sqls.push(sql2);
     }
+    console.log("lin=add_commission_order:" + JSON.stringify(sqls));
     m_db.execute(sqls, success, failure);
 }
 
@@ -113,11 +132,23 @@ exports.update_user_commission = function(objectArr, success, failure) {
 }
 
 //获取用户上两级信息
-exports.find_parent_user = function(objectr, success, failure) {
+exports.find_parent_user = function(object, success, failure) {
     var sql = ' SELECT userInfo.UI_ParentID parentId,pUserInfo.UI_ParentID pparentId ';
     sql += ' FROM User_Info userInfo ';
     sql += ' LEFT JOIN User_Info pUserInfo ON pUserInfo.UI_ID = userInfo.UI_ParentID ';
-    sql += ' where userInfo.UI_ID = ' + objectr["UI_ID"];
+    sql += ' where ';
+
+    if (object['UA_Name']) {
+        var UI_ID = '('
+        UI_ID += ' SELECT UI_ID FROM User_Info userInfo ';
+        UI_ID += ' Left JOIN User_Account account ON userInfo.UA_ID = account.UA_ID ';
+        UI_ID += ' where account.UA_Name= ' + object['UA_Name'];
+        UI_ID += ')';
+        object['UI_ID'] = UI_ID;
+        object['UA_Name'] = null;
+        sql += 'userInfo.UI_ID = ' + UI_ID
+    }
+
     m_db.query(sql, success, failure);
 }
 

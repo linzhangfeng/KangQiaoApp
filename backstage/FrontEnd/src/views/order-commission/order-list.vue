@@ -40,17 +40,17 @@
       </el-table-column>
       <el-table-column :label="$t('orderCommission.productName')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.userName }}</span>
+          <span>{{ row.productName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('orderCommission.productNumber')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.userName }}</span>
+          <span>{{ row.number }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('orderCommission.productPrice')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.userName }}</span>
+          <span>{{ row.price }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInformation.money')" width="80px">
@@ -82,16 +82,19 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('userInformation.userName')" prop="title">
-          <el-input v-model="temp.userName" />
+    <el-dialog :close-on-click-modal="false" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" :rules="rules" :model="orderTemp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="$t('orderCommission.productName')" prop="title">
+          <el-input v-model="orderTemp.productName" />
         </el-form-item>
-        <el-form-item :label="$t('userInformation.money')" prop="title">
-          <el-input v-model="temp.money" />
+        <el-form-item :label="$t('orderCommission.productNumber')" prop="title">
+        <el-input v-model="orderTemp.number" />
+        </el-form-item>
+        <el-form-item :label="$t('userInformation.userName')" prop="title">
+        <el-input v-model="orderTemp.userName" placeholder="请输入用户名或手机号" />
         </el-form-item>
         <el-form-item :label="$t('userInformation.dialogRemark')">
-          <el-input v-model="temp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-input v-model="orderTemp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -121,7 +124,7 @@ import { getOrderList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, up
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { getListData } from './testData'
-import { packageOrderDetailsData } from './config'
+import { packageOrderDetailsData ,getOrderStruct} from './config'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
@@ -167,9 +170,10 @@ export default {
         orderId: undefined,
         sort: '+id'
       },
-      temp: {
-        userName: '用户名称',
-        money: '消费金额',
+      orderTemp: {
+        userName: undefined,
+        number: undefined,
+        productName:undefined,
         dialogRemark: '备注',
         timestamp: new Date()
       },
@@ -237,15 +241,7 @@ export default {
       this.handleFilter()
     },
     resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
-      }
+      this.orderTemp = Object.assign({}, getOrderStruct()) // copy obj
     },
     handleCreate() {
       this.resetTemp()
@@ -258,9 +254,9 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          addOrder(this.temp).then(() => {
+          this.orderTemp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          this.orderTemp.author = 'vue-element-admin'
+          addOrder(this.orderTemp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -274,8 +270,7 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
+      this.orderTemp = Object.assign({}, row) // copy obj
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {

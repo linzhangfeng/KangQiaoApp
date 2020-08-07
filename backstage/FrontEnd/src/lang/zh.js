@@ -24,7 +24,7 @@ export default {
     orderCommission: {
         productName: '商品名称',
         productNumber: '数量',
-        productPrice: '价格/个',
+        productPrice: '成交价格/个',
     },
     userInformation: {
         // userlist

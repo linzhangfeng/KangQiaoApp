@@ -1,9 +1,12 @@
 var OrderStruct = {
-    orderId: 0, //订单Id
-    userName: '', //用户名称
-    createtime: '', //创建时间
-    updatetime: '', //更新时间
-    money: 0 //消费 
+    orderId: undefined, //订单Id
+    userName: undefined, //用户名称
+    createtime: undefined, //创建时间
+    updatetime: undefined, //更新时间
+    price: undefined, //成交价格
+    number: undefined, //成交数量
+    productName: undefined, //商品名称
+    money: undefined //消费 
 }
 
 var UserInfoStruct = {
@@ -46,14 +49,21 @@ export function getListData() {
     return listData;
 }
 
+export function getOrderStruct() {
+    return OrderStruct;
+}
+
 export function packageOrderDetailsData(data) {
     var orderDetailsArr = [];
     for (var i = 0; i < data.length; i++) {
         var obj = data[i];
         var packageData = copyObject(OrderStruct);
         packageData.orderId = obj['UO_ID'];
-        packageData.userName = obj['UI_NickName'];
-        packageData.money = obj['UO_Money'];
+        packageData.userName = obj['userName'];
+        packageData.money = obj['UO_Money'] / 100 + "元";
+        packageData.price = obj['UO_Price'] / 100 + "元/个";
+        packageData.number = obj['UO_Number'];
+        packageData.productName = obj['productName'];
         packageData.updatetime = new Date(obj['UpdateTime']);
         packageData.createtime = new Date(obj['CreateTime']);
         console.log('lin=packageOrderDetailsData:', packageData.createtime);

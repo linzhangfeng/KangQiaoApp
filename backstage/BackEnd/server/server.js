@@ -5,6 +5,7 @@ var g_userInfomation = require('./UserInfomation/UserInfomationController');
 var g_logManager = require('./LogManager/LogManagerController');
 var g_dashboradManager = require('./dashboard/DashBoardController');
 var g_login = require('./login/LoginController');
+var g_ordercommission = require('./OrderCommission/OrderCommissionController');
 var app = express();
 
 var m_config = null;
@@ -43,8 +44,8 @@ app.post('/getUserSumByDate', g_dashboradManager.getUserSumByDate);
 
 
 //userinformation begin
-app.post('/getOrderDetailList', g_userInfomation.getOrderDetailList);
-app.post('/addOrderDetail', g_userInfomation.addOrderDetail);
+// app.post('/getOrderDetailList', g_userInfomation.getOrderDetailList);
+// app.post('/addOrderDetail', g_userInfomation.addOrderDetail);
 app.post('/updateOrderDetail', g_userInfomation.updateOrderDetail);
 app.post('/deleteOrderDetail', g_userInfomation.deleteOrderDetail);
 app.post('/getUserList', g_userInfomation.getUserList);
@@ -52,6 +53,11 @@ app.post('/updateUserInfo', g_userInfomation.updateUserInfo);
 app.post('/addUser', g_userInfomation.addUser);
 app.post('/getChildUserList', g_userInfomation.getChildUserList);
 //userinformation end
+
+//ordercommission begin
+app.post('/getOrderDetailList', g_ordercommission.getOrderDetailList);
+app.post('/addOrderDetail', g_ordercommission.addOrderDetail);
+//ordercommission end
 
 //logmanager begin
 app.post('/getLogOperatorList', g_logManager.getLogOperatorList);

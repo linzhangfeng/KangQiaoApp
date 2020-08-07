@@ -1,20 +1,13 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.userId" :placeholder="$t('userInformation.userId')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.userName" :placeholder="$t('userInformation.userName')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.phone" :placeholder="$t('userInformation.phone')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.userAccount" :placeholder="$t('userInformation.userAccount')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
+      <el-input v-model="listQuery.userName" :placeholder="$t('orderCommission.userName')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.userId" :placeholder="$t('orderCommission.userId')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.orderId" :placeholder="$t('orderCommission.orderId')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.commissionId" :placeholder="$t('orderCommission.commissionId')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        {{ $t('table.reviewer') }}
-      </el-checkbox>
     </div>
 
     <el-table
@@ -27,29 +20,44 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column :label="$t('userInformation.userId')" width="80px" align="center">
+      <el-table-column :label="$t('orderCommission.commissionId')" width="80px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.commissionId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('orderCommission.userId')" width="100px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.userId }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.userName')" width="100px" align="center">
+      <el-table-column :label="$t('orderCommission.userName')" width="100px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.nickName')" width="100px" align="center">
+      <el-table-column :label="$t('orderCommission.orderId')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.nickName }}</span>
+          <span>{{ row.orderId }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.money')" width="80px">
+      <el-table-column :label="$t('orderCommission.orderCost')" width="80px">
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.money }}</span>
+          <span style="color:red;">{{ row.orderCost/100 }}元</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.phone')" width="130px">
+      <el-table-column :label="$t('orderCommission.commissionType')" width="130px">
         <template slot-scope="{row}">
-          <span>{{ row.phone }}</span>
+          <span>{{ row.commissionType == 1?"1级":"2级" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('orderCommission.commissionRatio')" width="130px">
+        <template slot-scope="{row}">
+          <span>{{ row.commissionRatio }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('orderCommission.commission')" width="130px">
+        <template slot-scope="{row}">
+          <span style="color:red;">{{ row.commission/100 }}元</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('common.createTime')" width="150px" align="center">
@@ -60,16 +68,6 @@
       <el-table-column :label="$t('common.updateTime')" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.updatetime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.actions')" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            {{ $t('userInformation.edit') }}
-          </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            {{ $t('userInformation.delete') }}
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,10 +122,11 @@
 
 <script>
 import {editUserInfo, getUserList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
+import {getCommissionList } from '@/api/order-commission'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import { getListData } from './testData'
-import { packageOrderDetailsData, packageUserInfoData } from './config'
+import { packageOrderDetailsData, packageCommissionData,getCommissionStruct } from './config'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
@@ -166,26 +165,8 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        userName: undefined,
-        userId: undefined,
-        phone:undefined,
-        userAccount:undefined,
-        sort: '+id'
-      },
-      temp: {
-        userId: 0, //用户Id
-        nickName: '', //昵称
-        userName: '', //用户名称
-        parentUserName: '', //上级用户名
-        phone: '', //手机
-        createtime: '', //创建时间
-        updatetime: new Date(), //更新时间
-        money: 0, //消费 
-        remark: 0, //备注 
-      },
+      listQuery: {},
+      temp: {},
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
@@ -208,15 +189,16 @@ export default {
     }
   },
   created() {
+    this.listQuery = getCommissionStruct();
     this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      getUserList(this.listQuery).then(response => {
+      getCommissionList(this.listQuery).then(response => {
         var recv_data = response.data;
-        this.list = packageUserInfoData(recv_data.list);
-        this.total =  recv_data.totalCount;
+        this.list = packageCommissionData(recv_data.list);
+        this.total =  recv_data.count;
         setTimeout(() => {
           this.listLoading = false
         }, 0.5 * 1000)

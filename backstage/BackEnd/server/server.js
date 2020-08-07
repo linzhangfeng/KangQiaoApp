@@ -6,6 +6,7 @@ var g_logManager = require('./LogManager/LogManagerController');
 var g_dashboradManager = require('./dashboard/DashBoardController');
 var g_login = require('./login/LoginController');
 var g_ordercommission = require('./OrderCommission/OrderCommissionController');
+var g_productManager = require('./ProductManager/ProductManagerController');
 var app = express();
 
 var m_config = null;
@@ -57,7 +58,15 @@ app.post('/getChildUserList', g_userInfomation.getChildUserList);
 //ordercommission begin
 app.post('/getOrderDetailList', g_ordercommission.getOrderDetailList);
 app.post('/addOrderDetail', g_ordercommission.addOrderDetail);
+app.post('/getCommissionList', g_ordercommission.getCommissionList);
 //ordercommission end
+
+//product begin
+app.post('/getProductList', g_productManager.getProductList);
+app.post('/addProduct', g_productManager.addProduct);
+app.post('/editProduct', g_productManager.editProduct);
+app.post('/removeProduct', g_productManager.removeProduct);
+//product end
 
 //logmanager begin
 app.post('/getLogOperatorList', g_logManager.getLogOperatorList);

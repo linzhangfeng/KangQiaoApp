@@ -111,6 +111,16 @@ exports.packageWhereSql = function(object) {
     return sql;
 };
 
+exports.packageWhereSqlByArr = function(arr) {
+    let sql = "";
+    if (arr.length > 0) sql += ' where '
+    for (var i = 0; i < arr.length; i++) {
+        if (i != 0) sql += "and";
+        sql += ' ' + arr[i] + ' ';
+    }
+    return sql;
+};
+
 exports.packageUpdateSql = function(object) {
     let sql = "";
     for (var key in object) {

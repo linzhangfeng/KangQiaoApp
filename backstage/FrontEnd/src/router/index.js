@@ -106,13 +106,6 @@ export const asyncRoutes = [{
                 meta: { title: 'userList', affix: true }
             },
             {
-                path: 'order-list',
-                component: () =>
-                    import ('@/views/user-information/order-list'),
-                name: 'OrderList',
-                meta: { title: 'orderList', noCache: true }
-            },
-            {
                 path: 'user-brance',
                 component: () =>
                     import ('@/views/user-information/user-brance'),
@@ -151,6 +144,22 @@ export const asyncRoutes = [{
                 meta: { title: 'commissionList', affix: true }
             }
         ]
+    },
+    {
+        path: '/product-manager',
+        component: Layout,
+        name: 'ProductManager',
+        meta: {
+            title: 'productManager',
+            icon: 'dashboard'
+        },
+        children: [{
+            path: 'product-list',
+            component: () =>
+                import ('@/views/product-manager/product-list'),
+            name: 'ProductList',
+            meta: { title: 'productList', noCache: true }
+        }]
     },
     {
         path: '/log-management',

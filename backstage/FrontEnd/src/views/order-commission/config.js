@@ -1,4 +1,6 @@
 var OrderStruct = {
+    page: 1,
+    limit: 20,
     orderId: undefined, //订单Id
     userName: undefined, //用户名称
     createtime: undefined, //创建时间
@@ -7,6 +9,21 @@ var OrderStruct = {
     number: undefined, //成交数量
     productName: undefined, //商品名称
     money: undefined //消费 
+}
+
+var CommissionStruct = {
+    page: 1,
+    limit: 20,
+    commissionId: undefined, //佣金Id
+    userName: undefined, //用户名称
+    orderId: undefined, //订单ID
+    commissionType: undefined, //佣金类型
+    commissionRatio: undefined, //佣金提成
+    commission: undefined, //佣金 
+    orderCost: undefined, //订单消费
+    createtime: undefined, //创建时间
+    updatetime: undefined, //更新时间
+    userId: undefined, //用户Id
 }
 
 var UserInfoStruct = {
@@ -53,6 +70,11 @@ export function getOrderStruct() {
     return OrderStruct;
 }
 
+
+export function getCommissionStruct() {
+    return copyObject(CommissionStruct);
+}
+
 export function packageOrderDetailsData(data) {
     var orderDetailsArr = [];
     for (var i = 0; i < data.length; i++) {
@@ -72,21 +94,22 @@ export function packageOrderDetailsData(data) {
     return orderDetailsArr;
 }
 
-export function packageUserInfoData(data) {
-    var userInfoArr = [];
+export function packageCommissionData(data) {
+    var arr = [];
     for (var i = 0; i < data.length; i++) {
         var obj = data[i];
         var packageData = copyObject(UserInfoStruct);
+        packageData.commissionId = obj['UC_ID'];
+        packageData.orderId = obj['UO_ID'];
+        packageData.commissionRatio = obj['UL_Ratio'];
+        packageData.commissionType = obj['UC_Type'];
+        packageData.commission = obj['UC_Commission'];
+        packageData.orderCost = obj['UC_CostMoeny'];
+        packageData.userName = obj['userName'];
         packageData.userId = obj['UI_ID'];
-        packageData.nickName = obj['UI_NickName'];
-        packageData.money = obj['UI_Gold'];
-        packageData.userName = obj['UA_Name'];
-        packageData.phone = obj['UI_Phone'];
-        packageData.parentUserName = obj['Parent_UserName'];
-        packageData.parentNickName = obj['Parent_NickName'];
         packageData.updatetime = new Date(obj['UpdateTime']);
         packageData.createtime = new Date(obj['CreateTime']);
-        userInfoArr.push(packageData);
+        arr.push(packageData);
     }
-    return userInfoArr;
+    return arr;
 }

@@ -18,6 +18,8 @@ var ErrorCode = {
     UpdateProductError: 309,
     DeleteProductError: 310,
     ProductNotFound: 311,
+    ProductHasFound: 312,
+    CommonError: 313,
 }
 
 var ErrorCodeMsg = {
@@ -33,7 +35,9 @@ var ErrorCodeMsg = {
     '308': '产品添加错误',
     '309': '产品更新错误',
     '310': '产品删除错误',
-    '310': '产品未配置',
+    '311': '产品未配置',
+    '312': '产品已配置',
+    '313': '未知错误',
 }
 exports.ErrorCodeMsg = ErrorCodeMsg;
 exports.ErrorCode = ErrorCode;

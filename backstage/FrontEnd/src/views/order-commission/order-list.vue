@@ -207,7 +207,7 @@ export default {
       getOrderList(this.listQuery).then(response => {
         var recv_data = response.data;
         this.list = packageOrderDetailsData(recv_data.list);
-        this.total =  recv_data.totalCount;
+        this.total =  recv_data.count;
         setTimeout(() => {
           this.listLoading = false
         }, 0.5 * 1000)

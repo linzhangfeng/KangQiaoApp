@@ -31,6 +31,14 @@ exports.add_product = function(objectArr, success, failure) {
     m_db.execute(sqls, success, failure);
 }
 
+//查询产品
+exports.find_product = function(object, success, failure) {
+    var sql = 'SELECT *';
+    sql += 'FROM Product_List ';
+    sql += 'where Product_List.PL_Name = ' + object["PL_Name"];
+    m_db.query(sql, success, failure);
+}
+
 //更新产品
 exports.update_product = function(objectArr, success, failure) {
     var sqls = [];

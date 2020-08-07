@@ -8,6 +8,8 @@ export default {
         orderCommission: '订单佣金',
         orderList: '订单列表',
         commissionList: '佣金列表',
+        productManager: '产品管理',
+        productList: '产品列表',
         logManagement: '日志管理',
         logLogin: '登录日志',
         logError: '错误日志',
@@ -18,6 +20,9 @@ export default {
         authorManagement: '权限管理'
     },
     common: {
+        actions: '用户操作',
+        edit: '编辑',
+        delete: '删除',
         createTime: '创建时间',
         updateTime: '更新时间'
     },
@@ -25,6 +30,21 @@ export default {
         productName: '商品名称',
         productNumber: '数量',
         productPrice: '成交价格/个',
+        commissionId: '佣金ID',
+        userName: '用户名',
+        userId: '用户ID',
+        orderId: '订单ID',
+        commissionType: '佣金类型',
+        commissionRatio: '佣金提成',
+        commission: '佣金',
+        orderCost: '订单消费',
+    },
+    productManager: {
+        productName: '产品名称',
+        productId: '产品ID',
+        productPrice: '价格',
+        oneRatio: '1级佣金提成',
+        twoRatio: '2级佣金提成',
     },
     userInformation: {
         // userlist

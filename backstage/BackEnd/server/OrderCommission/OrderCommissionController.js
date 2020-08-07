@@ -7,6 +7,35 @@ var compressing = require('compressing');
 var m_db = require('./DataBaseMgr');
 var CodeConfig = require('../../util/CommonConfig');
 
+//获得佣金列表
+exports.getCommissionList = function(req, res) {
+    if (req.url == '/getCommissionList') {
+        var tagName = "getCommissionList";
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            //验证用户
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+            if (recvData['userName']) sql_obj['UA_Name'] = Utils.toSqlString(recvData['userName']);
+            if (recvData['orderId']) sql_obj['UO_ID'] = recvData['orderId'];
+            if (recvData['userId']) sql_obj['UI_ID'] = recvData['userId'];
+            if (recvData['commissionId']) sql_obj['UO_ID'] = recvData['commissionId'];
+
+
+            Utils.packageLimitPage(sql_obj, recvData);
+            m_db.find_commission_list(sql_obj, function(data) {
+                res_data = data;
+                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            }, function() {
+                packageData = m_resultData.create(CodeConfig.ErrorCode.CommonError, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            });
+
+        }, tagName);
+    }
+}
+
 //获取订单列表
 exports.getOrderDetailList = function(req, res) {
     if (req.url == '/getOrderDetailList') {

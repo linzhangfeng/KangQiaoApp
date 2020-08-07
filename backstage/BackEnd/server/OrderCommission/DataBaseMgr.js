@@ -1,5 +1,57 @@
 var m_db = require('../../util/db');
 var Utils = require('../../util/Utils');
+
+//查询佣金信息
+exports.find_commission_list = function(object, success, failure) {
+    var sql = 'SELECT SQL_CALC_FOUND_ROWS commission_list.UC_ID,commission_list.UO_ID,commission_list.UL_Ratio,commission_list.UC_Type,';
+    sql += ' commission_list.UI_ID,commission_list.UC_Commission,commission_list.UC_CostMoeny,';
+    sql += ' commission_list.CreateTime,commission_list.UpdateTime,';
+    sql += ' account.UA_Name userName ';
+    sql += ' FROM User_Commission commission_list ';
+    sql += ' Left JOIN User_Info userInfo ON userInfo.UI_ID = commission_list.UI_ID  ';
+    sql += ' Left JOIN User_Account account ON userInfo.UA_ID = account.UA_ID  ';
+
+    let w_sql_arr = [];
+    if (object['UA_Name']) {
+        var temp_sql = ' account.UA_Name = ' + object['UA_Name'];
+        w_sql_arr.push(temp_sql);
+    }
+
+    if (object['UI_ID']) {
+        var temp_sql = ' commission_list.UI_ID = ' + object['UI_ID'];
+        w_sql_arr.push(temp_sql);
+    }
+
+    if (object['UO_ID']) {
+        var temp_sql = ' commission_list.UO_ID = ' + object['UO_ID'];
+        w_sql_arr.push(temp_sql);
+    }
+
+    if (object['UO_ID']) {
+        var temp_sql = 'commission_list.UO_ID = ' + object['UO_ID'];
+        w_sql_arr.push(temp_sql);
+    }
+
+    if (object['CreateTime']) {
+        var temp_sql = 'date_format([commission_list.CreateTime],"%Y-%m-%d") = to_days(' + object['CreateTime'] + ') ';
+        w_sql_arr.push(temp_sql);
+    }
+
+    sql += m_db.packageWhereSqlByArr(w_sql_arr);
+
+    sql += ' ORDER BY commission_list.CreateTime DESC ';
+    sql += ' LIMIT ' + object['startRow'] + ',' + object['pageSize'];
+
+    m_db.query(sql, function(data) {
+        var resultData = {};
+        resultData['list'] = data;
+        m_db.queryCount(function(count) {
+            resultData['count'] = count;
+            if (success) success(resultData);
+        }, failure)
+    }, failure);
+}
+
 //查询所有订单信息
 exports.find_order_details = function(object, success, failure) {
     var sql = 'SELECT SQL_CALC_FOUND_ROWS order_list.UO_ID,order_list.UO_Money,order_list.UO_Price,order_list.UO_Number,';

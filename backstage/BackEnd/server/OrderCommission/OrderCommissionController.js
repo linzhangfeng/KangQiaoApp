@@ -129,7 +129,8 @@ exports.addOrderDetail = function(req, res) {
                                         var public_parent_sql = {};
                                         public_parent_sql["UC_CostMoeny"] = commissionMoney;
                                         public_parent_sql["UO_ID"] = order_data.insertId;
-
+                                        public_parent_sql["CreateTime"] = 'NOW()';
+                                        public_parent_sql["UpdateTime"] = 'NOW()';
 
                                         if (parent_userdata[0].parentId) {
                                             var parent_sql_1 = Utils.copyObject(public_parent_sql);

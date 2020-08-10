@@ -103,6 +103,28 @@ exports.operatorLog = function(adminId, opType, content, tag) {
     m_dbLog.add_log_operator([objectData]);
 }
 
+exports.commissionLog = function(objectArr) {
+    adminId = 871150;
+    //包装数据
+    var sql_object_Arr = [];
+    for (var i = 0; i < objectArr.length; i++) {
+        var object = objectArr[i];
+        var objectData = {};
+        objectData["UI_ID"] = object["UI_ID"];
+        objectData["UO_ID"] = object["UO_ID"];
+        objectData["UC_ID"] = object["UC_ID"];
+        objectData["SC_Old_Money"] = object["SC_Old_Money"];
+        objectData["SC_New_Money"] = object["SC_New_Money"];
+
+        objectData["SC_Type"] = object["SC_Type"];
+        objectData["CreateTime"] = 'NOW()';
+        objectData["UpdateTime"] = 'NOW()';
+        sql_object_Arr.push(objectData);
+    }
+
+    m_dbLog.add_log_commission(sql_object_Arr);
+}
+
 exports.loginLog = function(req, res) {
     var resultData = new LoginLogModel();
     return resultData;

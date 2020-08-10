@@ -70,4 +70,5 @@ app.post('/removeProduct', g_productManager.removeProduct);
 
 //logmanager begin
 app.post('/getLogOperatorList', g_logManager.getLogOperatorList);
+app.post('/getLogCommissionList', g_logManager.getLogCommissionList);
 //logmanager end

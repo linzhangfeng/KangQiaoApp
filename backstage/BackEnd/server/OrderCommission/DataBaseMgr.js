@@ -159,10 +159,18 @@ exports.add_commission_order = function(objectArr, success, failure) {
         sql1 += m_db.packageInSertSql(objectArr[i]);
         sqls.push(sql1);
 
+        var sql3 = 'SELECT UI_Gold FROM User_Info ';
+        sql3 += ' WHERE UI_ID=' + object["UI_ID"];
+        sqls.push(sql3);
+
         var sql2 = 'UPDATE User_Info SET ';
         sql2 += ' UI_Gold = UI_Gold+' + object['UC_Commission'];
         sql2 += ' WHERE UI_ID=' + object["UI_ID"];
         sqls.push(sql2);
+
+        var sql4 = ' SELECT UI_Gold FROM User_Info ';
+        sql4 += ' WHERE UI_ID=' + object["UI_ID"];
+        sqls.push(sql4);
     }
     console.log("lin=add_commission_order:" + JSON.stringify(sqls));
     m_db.execute(sqls, success, failure);

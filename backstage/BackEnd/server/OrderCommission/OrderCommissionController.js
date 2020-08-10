@@ -6,7 +6,7 @@ var fd = require("formidable"); //载入 formidable
 var compressing = require('compressing');
 var m_db = require('./DataBaseMgr');
 var CodeConfig = require('../../util/CommonConfig');
-
+var m_dbLogUtils = require('../../util/LogUtils');
 //获得佣金列表
 exports.getCommissionList = function(req, res) {
     if (req.url == '/getCommissionList') {
@@ -149,8 +149,36 @@ exports.addOrderDetail = function(req, res) {
                                             commissionArr.push(parent_sql_2);
                                         }
 
-                                        m_db.add_commission_order(commissionArr, function() {
+                                        m_db.add_commission_order(commissionArr, function(addData) {
+                                            //把订单日记存入到数据库
+                                            console.log("lin=add_commission_order:" + JSON.stringify(addData));
+                                            var lineNum = 4;
+                                            var commissionLogObjectArr = [];
+                                            var tempArr = [
+                                                [],
+                                                []
+                                            ];
+                                            for (var i = 0; i < addData.length; i++) {
+                                                var obj = addData[i];
+                                                tempArr[parseInt(i / lineNum)].push(obj);
+                                            }
 
+                                            for (var i = 0; i < tempArr.length; i++) {
+                                                if (tempArr[i].length == 0) break;
+                                                var commissionLogObject = {};
+                                                commissionLogObject["SC_Type"] = 1;
+                                                commissionLogObject["UO_ID"] = order_data.insertId;
+                                                commissionLogObject["UC_ID"] = tempArr[i][0]["insertId"];
+                                                if (i == 0) {
+                                                    commissionLogObject["UI_ID"] = parent_userdata[0].parentId;
+                                                } else {
+                                                    commissionLogObject["UI_ID"] = parent_userdata[0].pparentId;
+                                                }
+                                                commissionLogObject["SC_Old_Money"] = tempArr[i][1][0]["UI_Gold"];
+                                                commissionLogObject["SC_New_Money"] = tempArr[i][3][0]["UI_Gold"];
+                                                commissionLogObjectArr.push(commissionLogObject);
+                                            }
+                                            if (commissionLogObjectArr.length != 0) m_dbLogUtils.commissionLog(commissionLogObjectArr);
                                         });
                                     }
                                 });

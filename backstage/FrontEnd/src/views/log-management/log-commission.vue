@@ -1,20 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.userId" :placeholder="$t('userInformation.userId')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.userName" :placeholder="$t('userInformation.userName')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.phone" :placeholder="$t('userInformation.phone')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.userAccount" :placeholder="$t('userInformation.userAccount')" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.orderId" :placeholder="$t('userInformation.orderId')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.userName" :placeholder="$t('userInformation.userName')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        {{ $t('table.reviewer') }}
-      </el-checkbox>
     </div>
 
     <el-table
@@ -27,29 +19,49 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column :label="$t('userInformation.userId')" width="80px" align="center">
+      <el-table-column :label="$t('logManager.logCommissionId')" width="80px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.orderId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('logManager.userId')" width="100px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.userId }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.userName')" width="100px" align="center">
+      <el-table-column :label="$t('logManager.commissionId')" width="100px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.commissionId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('logManager.orderId')" width="100px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.orderId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('logManager.userName')" width="120px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.nickName')" width="100px" align="center">
+      <el-table-column :label="$t('logManager.logType')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.nickName }}</span>
+          <span>{{ row.logType}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.money')" width="80px">
+      <el-table-column :label="$t('logManager.oldMoney')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.money/100 }}元</span>
+          <span>{{ row.oldMoney/100 }}元</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInformation.phone')" width="130px">
+      <el-table-column :label="$t('logManager.newMoney')" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.phone }}</span>
+          <span>{{ row.newMoney/100 }}元</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('logManager.commission')" width="80px" align="center">
+        <template slot-scope="{row}">
+          <span style="color:red;">{{ (row.commission)/100}}元</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('common.createTime')" width="150px" align="center">
@@ -57,47 +69,23 @@
           <span>{{ row.createtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.updateTime')" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.updatetime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('userInformation.actions')" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            {{ $t('userInformation.edit') }}
-          </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            {{ $t('userInformation.delete') }}
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('userInformation.userId')" prop="title">
-          <el-input v-model="temp.userId" :disabled="true" />
+    <el-dialog :close-on-click-modal="false" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" :rules="rules" :model="orderTemp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="$t('orderCommission.productName')" prop="title">
+          <el-input v-model="orderTemp.productName" />
+        </el-form-item>
+        <el-form-item :label="$t('orderCommission.productNumber')" prop="title">
+        <el-input v-model="orderTemp.number" />
         </el-form-item>
         <el-form-item :label="$t('userInformation.userName')" prop="title">
-          <el-input v-model="temp.userName" :disabled="true" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.nickName')" prop="title">
-          <el-input v-model="temp.nickName" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.parentUserName')" prop="title">
-          <el-input v-model="temp.parentUserName" :disabled="false" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.money')" prop="title">
-          <el-input v-model="temp.money" />
-        </el-form-item>
-        <el-form-item :label="$t('userInformation.phone')" prop="title">
-          <el-input v-model="temp.phone" />
+        <el-input v-model="orderTemp.userName" placeholder="请输入用户名或手机号" />
         </el-form-item>
         <el-form-item :label="$t('userInformation.dialogRemark')">
-          <el-input v-model="temp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-input v-model="orderTemp.dialogRemark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -117,18 +105,18 @@
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogPvVisible = false">{{ $t('table.confirm') }}</el-button>
-      </span>
+      </span> 
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {editUserInfo, getUserList, addOrder,editOrder,deleteOrder,fetchPv, createArticle, updateArticle } from '@/api/article'
+import { getLogCommissionList } from '@/api/log-manager'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import { getListData } from './testData'
-import { packageOrderDetailsData, packageUserInfoData } from './config'
+import { packageLogCommissionData ,getLogCommissionStruct} from './config'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { getCommissionList } from '../../api/order-commission'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -170,21 +158,15 @@ export default {
         page: 1,
         limit: 20,
         userName: undefined,
-        userId: undefined,
-        phone:undefined,
-        userAccount:undefined,
+        orderId: undefined,
         sort: '+id'
       },
-      temp: {
-        userId: 0, //用户Id
-        nickName: '', //昵称
-        userName: '', //用户名称
-        parentUserName: '', //上级用户名
-        phone: '', //手机
-        createtime: '', //创建时间
-        updatetime: new Date(), //更新时间
-        money: 0, //消费 
-        remark: 0, //备注 
+      orderTemp: {
+        userName: undefined,
+        number: undefined,
+        productName:undefined,
+        dialogRemark: '备注',
+        timestamp: new Date()
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
@@ -213,10 +195,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getUserList(this.listQuery).then(response => {
+      getLogCommissionList(this.listQuery).then(response => {
         var recv_data = response.data;
-        this.list = packageUserInfoData(recv_data.list);
-        this.total =  recv_data.totalCount;
+        this.list = packageLogCommissionData(recv_data.list);
+        this.total =  recv_data.count;
         setTimeout(() => {
           this.listLoading = false
         }, 0.5 * 1000)
@@ -250,15 +232,7 @@ export default {
       this.handleFilter()
     },
     resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
-      }
+      this.orderTemp = Object.assign({}, getLogCommissionStruct()) // copy obj
     },
     handleCreate() {
       this.resetTemp()
@@ -271,9 +245,9 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          addOrder(this.temp).then(() => {
+          this.orderTemp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          this.orderTemp.author = 'vue-element-admin'
+          addOrder(this.orderTemp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -287,8 +261,7 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
+      this.orderTemp = Object.assign({}, row) // copy obj
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -300,8 +273,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          editUserInfo(tempData).then(() => {
-            const index = this.list.findIndex(v => v.userId === this.temp.userId)
+          editOrder(tempData).then(() => {
+            const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
             this.$notify({

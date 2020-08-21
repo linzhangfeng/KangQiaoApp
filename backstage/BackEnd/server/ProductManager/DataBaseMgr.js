@@ -53,3 +53,17 @@ exports.update_product = function(objectArr, success, failure) {
     }
     m_db.execute(sqls, success, failure);
 }
+
+exports.find_product_name_list = function(objectArr, success, failure) {
+    var sql = 'SELECT SQL_CALC_FOUND_ROWS PL_Name ';
+    sql += 'FROM Product_List ';
+
+    m_db.query(sql, function(data) {
+        var resultData = {};
+        resultData['list'] = data;
+        m_db.queryCount(function(count) {
+            resultData['count'] = count;
+            if (success) success(resultData);
+        }, failure)
+    }, failure);
+}

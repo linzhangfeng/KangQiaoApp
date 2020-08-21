@@ -1,7 +1,7 @@
 import Utils from './Utils.js'
 export default class Http {
-	// static baseUrl = 'http://localhost:7767/';
-	static baseUrl = 'http://119.23.221.227:7767/';
+	static baseUrl = 'http://localhost:7767/';
+	// static baseUrl = 'http://119.23.221.227:7767/';
 	static sendHttp(path, method, data, success, failure) {
 		console.log(path + '  http_req_data:',data);
 		let url = this.baseUrl + path;

@@ -5,6 +5,8 @@ var fs = require('fs');
 var fd = require("formidable"); //载入 formidable
 var compressing = require('compressing');
 var m_db = require('./DataBaseMgr');
+var m_logic = require('./Logic');
+var m_product_db = require('../ProductManager/DataBaseMgr');
 var CodeConfig = require('../../util/CommonConfig');
 var m_dbLogUtils = require('../../util/LogUtils');
 //获得佣金列表
@@ -218,6 +220,147 @@ exports.deleteOrderDetail = function(req, res) {
             sql_obj['UpdateTime'] = 'NOW()';
             sql_obj['UO_State'] = 1;
             m_db.update_order_details([sql_obj], function(data) {
+                res_data = data;
+                packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            }, function() {
+                packageData = m_resultData.create(CodeConfig.ErrorCode.UpdateDetailsError, res_data);
+                m_httpUtils.post_response(res, packageData, tag);
+            });
+        }, tagName);
+    }
+}
+
+//快速添加订单
+exports.fastAddOrder = function(req, res) {
+    if (req.url == '/fastAddOrder') {
+        var tagName = "fastAddOrder";
+        var testData = {
+            list: [{
+                shopName: '肯德基',
+                userName: '13666666666',
+                sumCost: 40000,
+                aliasName: '小乔洗衣粉1*50;小乔牙刷1*50',
+                payType: 1,
+                product: [{
+                        productName: '小乔洗衣粉',
+                        price: 100,
+                        number: 20,
+                        cost: 2000
+                    },
+                    {
+                        productName: '小乔牙刷',
+                        price: 100,
+                        number: 20,
+                        cost: 2000
+                    },
+                ]
+            }, {
+                shopName: '麦当劳',
+                userName: '13111111111',
+                sumCost: 40000,
+                aliasName: '小乔洗衣粉1*50;小乔牙刷1*50',
+                payType: 1,
+                product: [{
+                        productName: '小乔洗衣粉',
+                        price: 100,
+                        number: 20,
+                        cost: 2000
+                    },
+                    {
+                        productName: '小乔牙刷',
+                        price: 100,
+                        number: 20,
+                        cost: 2000
+                    },
+                ]
+            }]
+        };
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            //客户单检测用户是否存在
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+
+            //获取订单列表
+            var order_list = recvData.list;
+            //检测列表的用户名
+
+            //检测用户
+
+            //检测商品
+
+            m_product_db.find_product_name_list({}, function(product_list) {
+                var resultObj = m_logic.checkProductName(order_list, product_list.list);
+                if (resultObj.result) {
+                    //添加订单
+                    var add_order_sql_obj_arr = [];
+                    for (var i = 0; i < order_list.length; i++) {
+                        var temp_obj = order_list[i];
+                        var add_order_sql_obj = {};
+                        add_order_sql_obj["userName"] = Utils.toSqlString(temp_obj.userName);
+                        add_order_sql_obj["UO_Money"] = temp_obj.sumCost;
+                        add_order_sql_obj["UO_PayType"] = temp_obj.payType;
+                        add_order_sql_obj["UO_Name"] = Utils.toSqlString(temp_obj.aliasName);
+                        add_order_sql_obj["CreateTime"] = 'NOW()';
+                        add_order_sql_obj["UpdateTime"] = 'NOW()';
+                        add_order_sql_obj_arr.push(add_order_sql_obj);
+                    }
+
+                    m_db.add_order_more(add_order_sql_obj_arr, function(add_order_data_arr) {
+                        //添加订单成功
+                        for (var i = 0; i < add_order_data_arr.length; i++) {
+                            var order_data = add_order_data_arr[i];
+                            var orderId = order_data.insertId;
+                            //添加商品列表
+                            var product_sql_list = [];
+                            var product = order_list[i];
+                            for (var k = 0; k < product.product.length; k++) {
+                                var productObj = product.product[k];
+                                var product_sql = {};
+                                product_sql["UO_ID"] = orderId;
+                                product_sql["PL_Name"] = Utils.toSqlString(productObj.productName);
+                                product_sql["OL_Number"] = productObj.number;
+                                product_sql["OL_Price"] = productObj.price;
+                                product_sql["OL_SumMoney"] = productObj.cost;
+                                product_sql_list.push(product_sql);
+                            }
+
+                            m_db.add_order_product_list(product_sql_list, function() {
+
+                            });
+                            packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                            m_httpUtils.post_response(res, packageData, tag);
+                        }
+                    });
+                    //添加订单商品
+
+                    //添加佣金订单
+
+                    //更新上级佣金 
+
+
+
+                } else {
+                    //产品未配置
+                }
+            });
+        }, tagName);
+    }
+}
+
+//获取订单的商品列表
+exports.getOrderProductList = function(req, res) {
+    if (req.url == '/getOrderProductList') {
+        var tagName = "getOrderProductList";
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            //验证用户
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+            if (recvData['orderId']) sql_obj['UO_ID'] = recvData['orderId'];
+            sql_obj['UO_State'] = 1;
+            m_db.find_order_product_list(sql_obj, function(data) {
                 res_data = data;
                 packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
                 m_httpUtils.post_response(res, packageData, tag);

@@ -7,3 +7,18 @@ export function getCommissionList(data) {
         data
     })
 }
+
+export function getOrderProductList(data) {
+    return request({
+        url: '/getOrderProductList',
+        method: 'post',
+        data
+    })
+}
+export function fastAddOrder(data) {
+    return request({
+        url: '/fastAddOrder',
+        method: 'post',
+        data
+    })
+}

@@ -54,7 +54,7 @@ exports.find_commission_list = function(object, success, failure) {
 
 //查询所有订单信息
 exports.find_order_details = function(object, success, failure) {
-    var sql = 'SELECT SQL_CALC_FOUND_ROWS order_list.UO_ID,order_list.UO_Money,order_list.UO_Price,order_list.UO_Number,';
+    var sql = 'SELECT SQL_CALC_FOUND_ROWS order_list.UO_ID,order_list.UO_Money,order_list.UO_Price,order_list.UO_Number,order_list.UO_Name,';
     sql += ' order_list.CreateTime,order_list.UpdateTime,';
     sql += ' account.UA_Name userName,';
     sql += ' product.PL_Name productName';
@@ -218,4 +218,66 @@ exports.find_product = function(objectr, success, failure) {
     sql += ' FROM Product_List ';
     sql += ' where PL_Name = ' + objectr["PL_Name"];
     m_db.query(sql, success, failure);
+}
+
+//添加订单
+exports.add_order_more = function(objectArr, success, failure) {
+    var sqls = [];
+
+    for (var i = 0; i < objectArr.length; i++) {
+        var object = objectArr[i];
+        var sql = 'INSERT INTO User_OrderDetails';
+        if (object["userName"]) {
+            var userName = object["userName"];
+            object["userName"] = null;
+            var UI_ID = '('
+            UI_ID += ' SELECT UI_ID FROM User_Info userInfo ';
+            UI_ID += ' Left JOIN User_Account account ON userInfo.UA_ID = account.UA_ID ';
+            UI_ID += ' where account.UA_Name= ' + userName;
+            UI_ID += ')';
+            object["UI_ID"] = UI_ID;
+        }
+        sql += m_db.packageInSertSql(object);
+        sqls.push(sql);
+    }
+    m_db.execute(sqls, success, failure);
+}
+
+//添加商品列表
+exports.add_order_product_list = function(objectArr, success, failure) {
+    var sqls = [];
+    for (var i = 0; i < objectArr.length; i++) {
+        var object = objectArr[i];
+        var sql = 'INSERT INTO Order_ProductList';
+        if (object["PL_Name"]) {
+            var PL_Name = object["PL_Name"];
+            object["PL_Name"] = null;
+            var PL_ID = '('
+            PL_ID += ' SELECT PL_ID FROM Product_List ';
+            PL_ID += ' where PL_Name= ' + PL_Name;
+            PL_ID += ')';
+            object["PL_ID"] = PL_ID;
+        }
+        sql += m_db.packageInSertSql(object);
+        sqls.push(sql);
+    }
+    m_db.execute(sqls, success, failure);
+}
+
+//获取商品信息
+exports.find_order_product_list = function(objectr, success, failure) {
+    var sql = 'SELECT SQL_CALC_FOUND_ROWS orderProduct.PL_ID,orderProduct.OL_Number,orderProduct.OL_Price,orderProduct.OL_SumMoney, ';
+    sql += ' product.PL_Name  productName';
+    sql += ' FROM Order_ProductList  orderProduct';
+    sql += ' LEFT JOIN Product_List product ON orderProduct.PL_ID = product.PL_ID ';
+    sql += ' where UO_ID = ' + objectr["UO_ID"];
+
+    m_db.query(sql, function(data) {
+        var resultData = {};
+        resultData['list'] = data;
+        m_db.queryCount(function(count) {
+            resultData['count'] = count;
+            if (success) success(resultData);
+        }, failure)
+    }, failure);
 }

@@ -34,6 +34,11 @@
 		"style": {
 			"navigationBarTitleText": "设置推介人"
 		}
+	}, {
+		"path": "pages/trade/OrderDetails",
+		"style": {
+			"navigationBarTitleText": "订单详情"
+		}
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

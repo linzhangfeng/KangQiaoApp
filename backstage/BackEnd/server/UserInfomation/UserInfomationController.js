@@ -276,3 +276,29 @@ exports.getChildUserList = function(req, res) {
         }, tagName);
     }
 }
+
+//用户检测
+exports.checkUser = function(req, res) {
+    var tagName = "checkUser";
+    if (req.url == '/checkUser') {
+        m_httpUtils.post_receive(req, function(recvData, tag) {
+            //验证用户
+            var sql_obj = {};
+            var res_data = {};
+            var packageData = null;
+
+            if (recvData['userName']) sql_obj['UA_Name'] = Utils.toSqlString(recvData['userName']);
+
+            //检测用户名是否被注册
+            m_db.find_user(sql_obj, function(data) {
+                if (data.length > 0) {
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.Success, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                } else {
+                    packageData = m_resultData.create(CodeConfig.ErrorCode.UserInfoNotFound, res_data);
+                    m_httpUtils.post_response(res, packageData, tag);
+                }
+            });
+        }, tagName);
+    }
+}

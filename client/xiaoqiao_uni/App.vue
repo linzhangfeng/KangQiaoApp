@@ -5,6 +5,7 @@ export default {
 	onLaunch: function() {
 		console.log('App Launch');
         Model.init();
+		plus.screen.lockOrientation('portrait-primary');
 		// uni.redirectTo({
 		// 	url: '/pages/auth/loginMethod'
 		// });
@@ -22,5 +23,6 @@ export default {
 	/*每个页面公共css */
 	@import url("assets/css/layout.css");
 	@import url("assets/css/reset.css");
+    @import url("assets/css/test.css");
 	@import url("assets/fonts/iconfont.css");
 </style>

@@ -77,10 +77,18 @@
 						playerData.parentId = userData["Parent_ID"];
 						Model.isLogin = true;
 						self.handleTabbar(temp_currentTabIndex)
+
 					} else {
 						self.handleTabbar(temp_currentTabIndex)
 						Utils.showToast(data.message);
 					}
+				});
+
+
+				Http.post("fastAddOrder", {
+					token: token,
+				}, function (data) {
+					console.log("lin=fastAddOrder=data:",data);
 				});
 			},
 			handleTabbar(index) {
@@ -88,6 +96,7 @@
 					Platform.goLogin();
 					return
 				}
+				index = 3;
 				this.currentTabIndex = index;
 				console.log("lin=handleTabbar:" + index);
 				this.setTitle(index);

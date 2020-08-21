@@ -6,9 +6,9 @@
                        style="height: 55px;width:55px;"
                        errorImage="/static/uimg/avatar.png" loadingImage="/static/uimg/avatar.png"/>
                 <view class="txt flex1 fs_18">小乔流水
-                    <text v-if="userInfo.gender == 1" class="iconfont iconnan c_589bee ml_10"
+                    <text v-if="1 == 1" class="iconfont iconnan c_589bee ml_10"
                           style="font-size:34rpx"></text>
-                    <text v-if="userInfo.gender == 2" class="iconfont iconnv c_ee7357 ml_10"
+                    <text v-if="1 == 2" class="iconfont iconnv c_ee7357 ml_10"
                           style="font-size:34rpx"></text>
                     <text class="db c_999 fs_12 mt_5">用户ID: 123456</text>
                 </view>
@@ -46,6 +46,7 @@
         <uni-pop ref="uniPop"></uni-pop>
     </view>
 </template>
+
 
 <script>
     export default {

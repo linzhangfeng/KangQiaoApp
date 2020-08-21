@@ -53,12 +53,15 @@ app.post('/getUserList', g_userInfomation.getUserList);
 app.post('/updateUserInfo', g_userInfomation.updateUserInfo);
 app.post('/addUser', g_userInfomation.addUser);
 app.post('/getChildUserList', g_userInfomation.getChildUserList);
+app.post('/checkUser', g_userInfomation.checkUser);
 //userinformation end
 
 //ordercommission begin
 app.post('/getOrderDetailList', g_ordercommission.getOrderDetailList);
 app.post('/addOrderDetail', g_ordercommission.addOrderDetail);
 app.post('/getCommissionList', g_ordercommission.getCommissionList);
+app.post('/fastAddOrder', g_ordercommission.fastAddOrder);
+app.post('/getOrderProductList', g_ordercommission.getOrderProductList);
 //ordercommission end
 
 //product begin

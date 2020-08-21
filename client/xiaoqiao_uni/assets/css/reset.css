@@ -678,6 +678,36 @@ image {
 	flex: 2;
 }
 
+.flex_1 {
+	 flex: 0.1;
+}
+.flex_2 {
+	flex: 0.2;
+}
+.flex_3 {
+	flex: 0.3;
+}
+.flex_4 {
+	flex: 0.4;
+}
+.flex_5 {
+	flex: 0.5;
+}
+.flex_6 {
+	 flex: 0.6;
+}
+.flex_7 {
+	flex: 0.7;
+}
+.flex_8 {
+	flex: 0.8;
+}
+.flex_9 {
+	flex: 0.9;
+}
+.flex_10 {
+	flex: 1;
+}
 .flex_alignt {
 	align-items: flex-start;
 }
@@ -686,7 +716,7 @@ image {
 	align-items: center;
 }
 
-.flex_alignb { 
+.flex_alignb {
 	align-items: flex-end;
 }
 
@@ -701,6 +731,32 @@ image {
 .flex_selfb {
 	align-self: flex-end;
 }
+
+
+.flex_items_start {
+	align-items: flex-start;
+}
+
+.flex_items_center {
+	align-items: center;
+}
+
+.flex_items_end {
+	align-items: flex-end;
+}
+
+.flex_self_start {
+	align-self: flex-start;
+}
+
+.flex_self_center {
+	align-self: center;
+}
+
+.flex_self_end {
+	align-self: flex-end;
+}
+
 
 .flex_justifyb {
 	justify-content: space-between;

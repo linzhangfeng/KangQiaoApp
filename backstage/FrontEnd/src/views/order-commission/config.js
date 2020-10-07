@@ -2,14 +2,15 @@ var OrderStruct = {
     page: 1,
     limit: 20,
     orderId: undefined, //订单Id
-    orderAliasName: undefined,
+    orderAliasName: undefined, //订单名称
     userName: undefined, //用户名称
     createtime: undefined, //创建时间
     updatetime: undefined, //更新时间
     price: undefined, //成交价格
     number: undefined, //成交数量
     productName: undefined, //商品名称
-    money: undefined //消费 
+    money: undefined, //消费 
+    commissionState: undefined //佣金状态 
 }
 
 var OrderProductStruct = {
@@ -222,6 +223,7 @@ export function packageOrderDetailsData(data) {
         packageData.price = obj['UO_Price'] / 100 + "元/个";
         packageData.number = obj['UO_Number'];
         packageData.productName = obj['productName'];
+        packageData.commissionState = obj['UO_CommisionState'];
         packageData.updatetime = new Date(obj['UpdateTime']);
         packageData.createtime = new Date(obj['CreateTime']);
         orderDetailsArr.push(packageData);

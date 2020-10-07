@@ -55,6 +55,7 @@ exports.find_commission_list = function(object, success, failure) {
 //查询所有订单信息
 exports.find_order_details = function(object, success, failure) {
     var sql = 'SELECT SQL_CALC_FOUND_ROWS order_list.UO_ID,order_list.UO_Money,order_list.UO_Price,order_list.UO_Number,order_list.UO_Name,';
+    sql += ' order_list.UO_CommisionState,';
     sql += ' order_list.CreateTime,order_list.UpdateTime,';
     sql += ' account.UA_Name userName,';
     sql += ' product.PL_Name productName';

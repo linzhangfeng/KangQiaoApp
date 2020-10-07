@@ -76,6 +76,13 @@
           <span style="color:red;">{{ row.money }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="佣金状态" width="80px">
+        <template slot-scope="{row}">
+          <span
+            :class="{'color_commission_type_green':(row.commissionState==1),'color_commission_type_red':(row.commissionState!=1)}"
+          >{{ row.commissionState == 1?"已发放":"未发放" }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.createTime')" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.createtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -116,171 +123,6 @@
       @pagination="getList"
     />
 
-    <el-dialog
-      :close-on-click-modal="false"
-      :title="textMap[dialogStatus]"
-      :visible.sync="isShowEdit"
-    >
-      <el-form
-        ref="dataForm_edit"
-        :rules="rules"
-        :model="orderTemp"
-        label-position="left"
-        label-width="100px"
-        style="width: 400px; margin-left:50px;"
-      >
-        <el-form-item label="订单ID" prop="title">
-          <el-input v-model="orderTemp.orderId" placeholder :disabled="true" />
-        </el-form-item>
-        <el-form-item label="用户名" prop="title">
-          <el-input v-model="orderTemp.userName" placeholder :disabled="true" />
-        </el-form-item>
-        <el-form-item label="消费总额" prop="title">
-          <el-input v-model="orderTemp.money" placeholder :disabled="true" />
-        </el-form-item>
-      </el-form>
-
-      <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="orderProductList"
-        border
-        fit
-        highlight-current-row
-        style="width: 560px;"
-        @sort-change="sortChange"
-      >
-        <el-table-column label="产品名称" width="150px" align="center">
-          <template slot-scope="{row}">
-            <span>{{row.productName}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="数量" width="150px" align="center">
-          <template slot-scope="{row}">
-            <span>{{row.number}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="价格" width="150px" align="center">
-          <template slot-scope="{row}">
-            <span>{{row.price/100}}元</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="消费金额" width="100px" align="center">
-          <template slot-scope="{row}">
-            <span>{{row.sumCost/100}}元</span>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="isShowEdit = false">{{ $t('table.cancel') }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus==='create'?fastCreateData():updateData()"
-        >{{ $t('table.confirm') }}</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog
-      :close-on-click-modal="false"
-      :title="textMap[dialogStatus]"
-      :visible.sync="isShowAdd"
-    >
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="orderTemp"
-        label-position="left"
-        label-width="100px"
-        style="width: 400px; margin-left:50px;"
-      >
-        <el-form-item label="订单内容" prop="title">
-          <el-input v-model="orderTemp.orderId" placeholder />
-        </el-form-item>
-      </el-form>
-
-      <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="AddOrderData"
-        border
-        fit
-        highlight-current-row
-        style="width: 820px;"
-        @sort-change="sortChange"
-      >
-        <el-table-column label="用户名称" width="150px" align="center">
-          <template slot-scope="{row}">
-            <el-col>
-              <span>{{row.userName}}</span>
-            </el-col>
-            <el-col v-if="!row.isCheck">
-              <span>
-                <el-button
-                  v-waves
-                  class="filter-item"
-                  type="primary"
-                  icon="el-icon-search"
-                  @click="handleCheckUser(row)"
-                >检测用户</el-button>
-              </span>
-            </el-col>
-            <el-col v-if="row.isCheck">
-              <span class="user-check-text">用户检测通过</span>
-            </el-col>
-          </template>
-        </el-table-column>
-        <el-table-column label="消费总额" width="100px" align="center">
-          <template slot-scope="{row}">
-            <span>{{row.sumCost}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="商品列表" width="500px" align="center">
-          <template slot-scope="{row}">
-            <el-table
-              :key="tableKey"
-              v-loading="listLoading"
-              :data="row.product"
-              border
-              fit
-              highlight-current-row
-              style="width: 470px;"
-              @sort-change="sortChange"
-            >
-              <el-table-column label="产品名称" width="150px" align="center">
-                <template slot-scope="{row}">
-                  <span>{{row.productName}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="数量" width="100px" align="center">
-                <template slot-scope="{row}">
-                  <span>{{row.number}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="价格" width="100px" align="center">
-                <template slot-scope="{row}">
-                  <span>{{row.price/100}}元</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="消费金额" width="100px" align="center">
-                <template slot-scope="{row}">
-                  <span>{{row.cost/100}}元</span>
-                </template>
-              </el-table-column>
-            </el-table>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="isShowAdd = false">{{ $t('table.cancel') }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus==='create'?fastCreateData():updateData()"
-        >{{ $t('table.confirm') }}</el-button>
-      </div>
-    </el-dialog>
-
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel" />
@@ -291,6 +133,8 @@
       </span>
     </el-dialog>
     <commission :visible="test" :confrim="handlerCommissionConfirm"></commission>
+    <add-order :visible="isShowAdd"></add-order>
+    <edit-order :visible="isShowEdit" :model="orderModel"></edit-order>
   </div>
 </template>
 
@@ -317,6 +161,8 @@ import {
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import { getOrderProductList, fastAddOrder } from "@/api/order-commission";
 import Commission from "./components/Commission";
+import AddOrder from "./components/AddOrder";
+import EditOrder from "./components/EditOrder";
 const calendarTypeOptions = [
   { key: "CN", display_name: "China" },
   { key: "US", display_name: "USA" },
@@ -332,7 +178,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: "ComplexTable",
-  components: { Pagination, Commission },
+  components: { Pagination, Commission, AddOrder, EditOrder },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -352,8 +198,9 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
-      test: true,
+      test: false,
       listLoading: true,
+      orderModel: null,
       listQuery: {
         page: 1,
         limit: 20,
@@ -459,16 +306,12 @@ export default {
     },
     handleCreate() {
       this.resetTemp();
-      this.dialogStatus = "create";
-      this.isShowAdd = true;
-
+      this.isShowAdd = false;
       this.AddOrderData = getOrderTestData();
-      console.log(
-        "lin=handleCreate=AddOrderData:" + JSON.stringify(this.AddOrderData)
-      );
-      this.$nextTick(() => {
-        this.$refs["dataForm"].clearValidate();
-      });
+      setTimeout(() => {
+        this.isShowAdd = true;
+        console.log("lin=handleCreate:" + this.test);
+      }, 200);
     },
 
     fastCreateData() {
@@ -511,13 +354,17 @@ export default {
       });
     },
     handleUpdate(row) {
-      this.orderTemp = Object.assign({}, row); // copy obj
+      // this.orderTemp = = Object.assign({}, row); // copy obj
+      this.orderModel = Object.assign({}, row); // copy obj
       this.dialogStatus = "update";
-      this.isShowEdit = true;
-      this.getOrderProduct(this.orderTemp.orderId);
-      this.$nextTick(() => {
-        this.$refs["dataForm_edit"].clearValidate();
-      });
+      this.isShowEdit = false;
+      setTimeout(() => {
+        this.isShowEdit = true;
+      }, 200);
+      // this.getOrderProduct(this.orderTemp.orderId);
+      // this.$nextTick(() => {
+      //   this.$refs["dataForm_edit"].clearValidate();
+      // });
     },
     updateData() {
       this.$refs["dataForm_edit"].validate(valid => {
@@ -599,6 +446,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.color_commission_type_green {
+  color: green;
+}
+.color_commission_type_red {
+  color: red;
+}
 .user-check-text {
   background-color: rgb(0, 255, 55);
 }

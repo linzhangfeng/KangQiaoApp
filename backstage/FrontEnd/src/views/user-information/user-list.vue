@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column :label="$t('userInformation.money')" width="80px">
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.money }}</span>
+          <span style="color:red;">{{ row.money/100 }}元</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInformation.phone')" width="130px">

@@ -10,8 +10,13 @@ export function getOrderList(data) {
 
 //添加订单
 export function addOrder(data) {
+    // return request({
+    //     url: '/addOrderDetail',
+    //     method: 'post',
+    //     data
+    // })
     return request({
-        url: '/addOrderDetail',
+        url: '/fastAddOrder',
         method: 'post',
         data
     })

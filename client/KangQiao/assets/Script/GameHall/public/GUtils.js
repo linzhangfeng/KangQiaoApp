@@ -306,6 +306,7 @@ window.GUtils = {
         }
         return newobj;
     },
+
     timeFormatter: function (value) {
         var da = new Date(parseInt(value.replace("/Date(", "").replace(")/", "").split("+")[0]));
         return da.getFullYear() + "-" + GUtils.polish(da.getMonth() + 1,2) + "-" + GUtils.polish(da.getDate(),2) + " " + GUtils.polish(da.getHours(),2) + ":" + GUtils.polish(da.getMinutes(),2) + ":" + GUtils.polish(da.getSeconds(),2);

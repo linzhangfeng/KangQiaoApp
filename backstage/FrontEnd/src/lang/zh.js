@@ -14,6 +14,7 @@ export default {
         logLogin: '登录日志',
         logError: '错误日志',
         logOperate: '操作日志',
+        logCommission: '佣金日记',
         systemManagement: '系统管理',
         menuManagement: '菜单管理',
         managerManagement: '管理员管理',
@@ -46,6 +47,17 @@ export default {
         oneRatio: '1级佣金提成',
         twoRatio: '2级佣金提成',
     },
+    logManager: {
+        logCommissionId: '日记ID',
+        userId: '用户ID',
+        commissionId: '佣金ID',
+        orderId: '订单ID',
+        userName: '用户名',
+        logType: '日记类型',
+        oldMoney: '更新前佣金',
+        newMoney: '更新后佣金',
+        commission: '佣金',
+    },
     userInformation: {
         // userlist
         userId: '用户ID',
@@ -70,7 +82,8 @@ export default {
         userName: '用户名',
         phone: '手机号',
         userAccount: '用户账号',
-        money: '消费金额'
+        userAccount: '用户账号',
+        money: '佣金'
 
         // lowerlist
     },

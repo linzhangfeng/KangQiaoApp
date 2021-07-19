@@ -35,9 +35,20 @@ exports.find_order_details_count = function(object, success, failure) {
     m_db.query(sql, success, failure);
 }
 
-exports.find_user_info = function(objectArr, success, failure) {
+exports.find_user = function(object, success, failure) {
     var sql = 'SELECT * FROM User_Info where ';
-    sql += m_db.packageWhereSql(objectArr);
+
+    if (object['UA_Name']) {
+        var UI_ID = '('
+        UI_ID += ' SELECT UI_ID FROM User_Info userInfo ';
+        UI_ID += ' Left JOIN User_Account account ON userInfo.UA_ID = account.UA_ID ';
+        UI_ID += ' where account.UA_Name= ' + object['UA_Name'];
+        UI_ID += ')';
+        object['UI_ID'] = UI_ID;
+        object['UA_Name'] = null;
+    }
+
+    sql += m_db.packageWhereSql(object);
     m_db.query(sql, success, failure);
 }
 

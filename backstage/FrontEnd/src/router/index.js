@@ -189,6 +189,13 @@ export const asyncRoutes = [{
                     import ('@/views/log-management/log-operate'),
                 name: 'LogOperate',
                 meta: { title: 'logOperate', noCache: true }
+            },
+            {
+                path: 'log-commission',
+                component: () =>
+                    import ('@/views/log-management/log-commission'),
+                name: 'LogCommission',
+                meta: { title: 'logCommission', noCache: true }
             }
         ]
     },
